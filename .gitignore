@@ -32,7 +32,6 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# SQLite local database
-prisma/dev.db*
-dev.db*
-
+# SQLite temporary journal files
+prisma/dev.db-journal
+prisma/*.db-journal

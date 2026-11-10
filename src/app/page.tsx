@@ -12,16 +12,21 @@ import { ProductItem } from '@/types';
 export const revalidate = 60; // ISR 60s
 
 export default async function HomePage() {
-  const products = await prisma.product.findMany({
-    where: { active: true },
-    orderBy: { reviewsCount: 'desc' },
-    include: {
-      images: { orderBy: { displayOrder: 'asc' } },
-      variants: true,
-      category: true,
-    },
-    take: 10,
-  });
+  let products: unknown[] = [];
+  try {
+    products = await prisma.product.findMany({
+      where: { active: true },
+      orderBy: { reviewsCount: 'desc' },
+      include: {
+        images: { orderBy: { displayOrder: 'asc' } },
+        variants: true,
+        category: true,
+      },
+      take: 10,
+    });
+  } catch (error) {
+    console.warn('Banco de dados ainda não inicializado ou indisponível na build:', error);
+  }
 
   return (
     <div className="w-full">
