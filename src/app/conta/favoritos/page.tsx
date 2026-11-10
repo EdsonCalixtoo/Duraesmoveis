@@ -31,7 +31,7 @@ const CATALOG_ITEMS: FavProduct[] = [
     price: 5391.0,
     originalPrice: 5990.0,
     discountPercent: 10,
-    image: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=600&q=80',
+    image: '/images/prod-sofa-riviera.jpg',
     stock: 14,
   },
   {
@@ -42,7 +42,7 @@ const CATALOG_ITEMS: FavProduct[] = [
     price: 1499.0,
     originalPrice: 1799.0,
     discountPercent: 15,
-    image: 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=600&q=80',
+    image: '/images/prod-poltrona-fibra.jpg',
     stock: 20,
   },
   {
@@ -53,7 +53,7 @@ const CATALOG_ITEMS: FavProduct[] = [
     price: 1490.0,
     originalPrice: 1990.0,
     discountPercent: 25,
-    image: 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=600&q=80',
+    image: '/images/prod-espreguicadeira-sling.jpg',
     stock: 16,
   },
 ];

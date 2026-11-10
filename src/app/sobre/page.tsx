@@ -3,8 +3,8 @@ import Image from 'next/image';
 import { ShieldCheck, Compass, Leaf, Award, CheckCircle2 } from 'lucide-react';
 
 export const metadata = {
-  title: 'Sobre Nós — OutdoorStyle',
-  description: 'Conheça a história e os pilares de qualidade da OutdoorStyle.',
+  title: 'Sobre Nós — Durães Móveis',
+  description: 'Conheça a história e os pilares de qualidade da Durães Móveis.',
 };
 
 export default function AboutPage() {
@@ -16,8 +16,8 @@ export default function AboutPage() {
           {/* Left Media */}
           <div className="lg:col-span-6 relative aspect-[4/3] rounded-2xl overflow-hidden border border-[#2B2B2B] shadow-2xl">
             <Image
-              src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80"
-              alt="Sobre a OutdoorStyle Móveis de Alto Padrão"
+              src="/images/hero-outdoor-luxury.jpg"
+              alt="Sobre a Durães Móveis — Alto Padrão"
               fill
               className="object-cover"
               sizes="600px"
@@ -32,7 +32,7 @@ export default function AboutPage() {
             </div>
 
             <h1 className="text-3xl sm:text-4xl font-black text-white leading-tight">
-              Sobre a OutdoorStyle
+              Sobre a Durães Móveis
             </h1>
 
             <p className="text-sm sm:text-base text-[#D1D1D1] leading-relaxed">

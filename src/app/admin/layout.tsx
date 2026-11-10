@@ -2,8 +2,8 @@ import React from 'react';
 import AdminSidebar from '@/components/admin/AdminSidebar';
 
 export const metadata = {
-  title: 'OutdoorStyle — Painel Administrativo',
-  description: 'Painel de gestão da loja virtual OutdoorStyle.',
+  title: 'Durães Móveis — Painel Administrativo',
+  description: 'Painel de gestão da loja virtual Durães Móveis.',
 };
 
 export default function AdminLayout({
@@ -20,3 +20,4 @@ export default function AdminLayout({
     </div>
   );
 }
+

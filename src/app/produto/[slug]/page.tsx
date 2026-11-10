@@ -17,10 +17,10 @@ export async function generateMetadata({ params }: ProductPageProps) {
     where: { slug: params.slug },
   });
 
-  if (!product) return { title: 'Produto Não Encontrado — OutdoorStyle' };
+  if (!product) return { title: 'Produto Não Encontrado — Durães Móveis' };
 
   return {
-    title: `${product.name} — OutdoorStyle`,
+    title: `${product.name} — Durães Móveis`,
     description: product.shortDescription || product.description.slice(0, 160),
   };
 }

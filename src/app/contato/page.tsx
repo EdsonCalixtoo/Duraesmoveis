@@ -73,7 +73,7 @@ export default function ContactPage() {
                 <div>
                   <span className="text-[11px] text-[#A3A3A3] block">E-mail Comercial</span>
                   <strong className="text-sm font-bold text-white">
-                    contato@outdoorstyle.com.br
+                    contato@duraesmoveis.com.br
                   </strong>
                 </div>
               </div>
@@ -102,7 +102,7 @@ export default function ContactPage() {
                 </div>
                 <h3 className="text-xl font-bold text-white">Mensagem Recebida!</h3>
                 <p className="text-xs text-[#A3A3A3] max-w-sm mx-auto">
-                  Agradecemos seu contato. Um consultor especialista da OutdoorStyle retornará em breve no seu e-mail ou WhatsApp.
+                  Agradecemos seu contato. Um consultor especialista da Durães Móveis retornará em breve no seu e-mail ou WhatsApp.
                 </p>
                 <button
                   type="button"

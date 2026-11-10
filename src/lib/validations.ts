@@ -98,3 +98,4 @@ export const couponSchema = z.object({
   maxUses: z.number().int().positive().optional().nullable(),
   active: z.boolean().default(true),
 });
+

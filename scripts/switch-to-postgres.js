@@ -15,3 +15,4 @@ fs.writeFileSync(schemaPath, pgContent, 'utf8');
 console.log('✅ Prisma configurado com sucesso para PostgreSQL!');
 console.log('Certifique-se de configurar a variável DATABASE_URL com a string de conexão postgresql://... no arquivo .env');
 console.log('Em seguida, execute: npx prisma db push && npx prisma db seed');
+

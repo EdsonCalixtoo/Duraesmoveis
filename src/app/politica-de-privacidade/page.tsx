@@ -11,7 +11,7 @@ export default function PrivacyPolicyPage() {
           <section className="space-y-2">
             <h2 className="text-base font-bold text-white">1. Informações Gerais</h2>
             <p>
-              A OutdoorStyle Comércio de Móveis LTDA respeita a sua privacidade e cumpre integralmente as disposições da Lei Geral de Proteção de Dados (Lei nº 13.709/2018 - LGPD). Este documento explica de forma clara e transparente como tratamos seus dados pessoais.
+              A Durães Móveis LTDA respeita a sua privacidade e cumpre integralmente as disposições da Lei Geral de Proteção de Dados (Lei nº 13.709/2018 - LGPD). Este documento explica de forma clara e transparente como tratamos seus dados pessoais.
             </p>
           </section>
 
@@ -25,7 +25,7 @@ export default function PrivacyPolicyPage() {
           <section className="space-y-2">
             <h2 className="text-base font-bold text-white">3. Seus Direitos</h2>
             <p>
-              Você pode a qualquer momento solicitar a confirmação da existência de tratamento, acesso aos dados, correção de dados incompletos ou a exclusão de seus dados pessoais através do canal oficial <strong>contato@outdoorstyle.com.br</strong>.
+              Você pode a qualquer momento solicitar a confirmação da existência de tratamento, acesso aos dados, correção de dados incompletos ou a exclusão de seus dados pessoais através do canal oficial <strong>contato@duraesmoveis.com.br</strong>.
             </p>
           </section>
         </div>

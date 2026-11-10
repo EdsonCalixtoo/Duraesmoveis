@@ -21,7 +21,7 @@ const FAQS = [
     a: 'Recomenda-se lavar com água corrente, esponja macia e detergente neutro. Nunca utilize produtos abrasivos, alvejantes ou solventes fortes.',
   },
   {
-    q: 'Qual o prazo de garantia oferecido pela OutdoorStyle?',
+    q: 'Qual o prazo de garantia oferecido pela Durães Móveis?',
     a: 'Oferecemos 5 anos de garantia estrutural para toda a nossa linha em alumínio naval e 1 ano para os tecidos e acabamentos.',
   },
 ];

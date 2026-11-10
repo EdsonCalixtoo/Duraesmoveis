@@ -320,3 +320,4 @@ model StoreSetting {
 
   @@index([key])
 }
+

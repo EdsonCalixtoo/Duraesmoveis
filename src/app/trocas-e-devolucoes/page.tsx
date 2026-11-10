@@ -24,7 +24,7 @@ export default function ReturnsPolicyPage() {
           <section className="space-y-2">
             <h2 className="text-base font-bold text-white">3. Procedimento de Coleta</h2>
             <p>
-              Em caso de devolução ou troca por garantia, a OutdoorStyle envia a transportadora diretamente ao seu endereço para realizar a coleta do móvel sem qualquer custo adicional para você.
+              Em caso de devolução ou troca por garantia, a Durães Móveis envia a transportadora diretamente ao seu endereço para realizar a coleta do móvel sem qualquer custo adicional para você.
             </p>
           </section>
         </div>

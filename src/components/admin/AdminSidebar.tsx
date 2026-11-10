@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import {
   LayoutDashboard,
@@ -37,12 +38,12 @@ export default function AdminSidebar() {
       <div className="space-y-6">
         {/* Brand Admin */}
         <div className="px-2 pt-2 pb-4 border-b border-[#202020]">
-          <div className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-lg bg-[#8CF000] text-black flex items-center justify-center font-black text-xs">
-              OS
+          <div className="flex items-center gap-2.5">
+            <div className="relative w-8 h-8 rounded-lg overflow-hidden bg-[#161616] border border-[#2B2B2B] flex items-center justify-center flex-shrink-0 shadow-sm">
+              <Image src="/icon.png" alt="Durães Móveis" fill className="object-contain p-0.5" />
             </div>
             <div>
-              <span className="font-bold text-sm text-white">OutdoorStyle</span>
+              <span className="font-bold text-sm text-white">Durães Móveis</span>
               <span className="text-[10px] text-[#8CF000] block -mt-0.5 font-semibold">
                 Painel Admin
               </span>
@@ -91,3 +92,4 @@ export default function AdminSidebar() {
     </aside>
   );
 }
+

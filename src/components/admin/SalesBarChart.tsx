@@ -64,3 +64,4 @@ export default function SalesBarChart({ data }: { data: SalesDataPoint[] }) {
     </div>
   );
 }
+

@@ -70,7 +70,7 @@ export default function Footer() {
             <ul className="space-y-2 text-xs">
               <li>
                 <Link href="/sobre" className="hover:text-[#8CF000] transition-colors">
-                  Sobre a OutdoorStyle
+                  Sobre a Durães Móveis
                 </Link>
               </li>
               <li>
@@ -116,7 +116,7 @@ export default function Footer() {
               </a>
               <div className="flex items-center gap-2">
                 <Headphones className="w-4 h-4 text-[#8CF000]" />
-                <span>contato@outdoorstyle.com.br</span>
+                <span>contato@duraesmoveis.com.br</span>
               </div>
               <p className="text-[11px] text-[#737373] pt-1">
                 Segunda a Sexta: 08h às 19h<br />
@@ -133,7 +133,7 @@ export default function Footer() {
         {/* Bottom Bar */}
         <div className="pt-8 border-t border-[#1C1C1C] flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-[#737373]">
           <div>
-            &copy; {new Date().getFullYear()} OutdoorStyle Comércio de Móveis LTDA. Todos os direitos reservados. CNPJ: 45.123.789/0001-00.
+            &copy; {new Date().getFullYear()} Durães Móveis LTDA. Todos os direitos reservados. CNPJ: 45.123.789/0001-00.
           </div>
           <div className="flex items-center gap-3">
             <span className="px-2 py-1 rounded bg-[#111111] border border-[#2B2B2B] text-[11px] text-[#A3A3A3]">
@@ -151,3 +151,4 @@ export default function Footer() {
     </footer>
   );
 }
+

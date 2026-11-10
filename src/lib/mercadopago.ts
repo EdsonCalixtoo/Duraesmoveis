@@ -45,7 +45,7 @@ export class MercadoPagoService {
     const amountStr = params.amount.toFixed(2);
     
     // Payload EMV padrão PIX do Banco Central do Brasil
-    const copyPastePix = `00020126580014br.gov.bcb.pix0136outdoorstyle-pix@outdoorstyle.com.br520400005303986540${amountStr.length}${amountStr}5802BR5916OUTDOORSTYLE MOVEIS6008CAMPINAS62190515${params.orderNumber}6304`;
+    const copyPastePix = `00020126580014br.gov.bcb.pix0136duraesmoveis-pix@duraesmoveis.com.br520400005303986540${amountStr.length}${amountStr}5802BR5914DURAES MOVEIS6008CAMPINAS62190515${params.orderNumber}6304`;
     
     // Gerar imagem do QR Code em Data URL base64
     let qrCodeBase64 = '';
@@ -123,3 +123,4 @@ export class MercadoPagoService {
     return Boolean(signatureHeader);
   }
 }
+

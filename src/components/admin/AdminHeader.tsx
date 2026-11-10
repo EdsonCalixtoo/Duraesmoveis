@@ -39,3 +39,4 @@ export default function AdminHeader({ title, subtitle }: AdminHeaderProps) {
     </header>
   );
 }
+

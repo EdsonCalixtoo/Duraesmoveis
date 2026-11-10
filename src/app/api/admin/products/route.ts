@@ -62,7 +62,7 @@ export async function POST(req: Request) {
             {
               url:
                 imageUrl ||
-                'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80',
+                '/images/prod-sofa-riviera.jpg',
               alt: name,
               isCover: true,
               displayOrder: 1,

@@ -173,3 +173,4 @@ export interface OrderDetail {
     paidAt?: string | Date | null;
   } | null;
 }
+

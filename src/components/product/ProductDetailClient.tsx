@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Heart, ShoppingBag, Zap, Star, ShieldCheck, Check } from 'lucide-react';
+import { motion } from 'framer-motion';
 import { ProductItem, ProductVariantItem } from '@/types';
 import { formatCurrency } from '@/lib/utils';
 import { useCartStore } from '@/store/useCartStore';
@@ -34,7 +35,7 @@ export default function ProductDetailClient({ product }: { product: ProductItem 
   const coverImage =
     product.images?.find((img) => img.isCover)?.url ||
     product.images?.[0]?.url ||
-    'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80';
+    '/images/prod-sofa-riviera.jpg';
 
   const handleAddToCart = () => {
     addItem({
@@ -147,13 +148,15 @@ export default function ProductDetailClient({ product }: { product: ProductItem 
                 {product.variants.map((v) => {
                   const isSelected = selectedVariant?.id === v.id;
                   return (
-                    <button
+                    <motion.button
                       key={v.id}
+                      whileHover={{ scale: 1.15 }}
+                      whileTap={{ scale: 0.95 }}
                       onClick={() => setSelectedVariant(v)}
                       title={v.colorName}
                       className={`relative w-9 h-9 rounded-full border-2 transition-all flex items-center justify-center ${
                         isSelected
-                          ? 'border-[#8CF000] ring-2 ring-[#8CF000]/30 scale-110'
+                          ? 'border-[#8CF000] ring-2 ring-[#8CF000]/30 scale-110 shadow-[0_0_12px_rgba(140,240,0,0.4)]'
                           : 'border-[#383838] hover:border-white'
                       }`}
                       style={{ backgroundColor: v.colorHex }}
@@ -161,7 +164,7 @@ export default function ProductDetailClient({ product }: { product: ProductItem 
                       {isSelected && (
                         <Check className="w-4 h-4 text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]" />
                       )}
-                    </button>
+                    </motion.button>
                   );
                 })}
               </div>
@@ -173,55 +176,63 @@ export default function ProductDetailClient({ product }: { product: ProductItem 
             <div className="flex items-center gap-3">
               {/* Quantity */}
               <div className="flex items-center bg-[#181818] border border-[#333333] rounded-xl px-2">
-                <button
+                <motion.button
+                  whileTap={{ scale: 0.85 }}
                   onClick={() => setQuantity(Math.max(1, quantity - 1))}
                   className="px-3 py-3 text-white hover:text-[#8CF000] font-bold text-sm"
                 >
                   -
-                </button>
+                </motion.button>
                 <span className="px-3 text-sm font-bold text-white">{quantity}</span>
-                <button
+                <motion.button
+                  whileTap={{ scale: 0.85 }}
                   onClick={() => setQuantity(Math.min(selectedVariant?.stock || 10, quantity + 1))}
                   className="px-3 py-3 text-white hover:text-[#8CF000] font-bold text-sm"
                 >
                   +
-                </button>
+                </motion.button>
               </div>
 
               {/* Add to Cart */}
-              <button
+              <motion.button
+                whileHover={{ scale: 1.02, backgroundColor: '#A3FF12' }}
+                whileTap={{ scale: 0.97 }}
                 onClick={handleAddToCart}
-                className="flex-1 py-3.5 px-4 rounded-xl bg-[#8CF000] hover:bg-[#A3FF12] text-black font-extrabold text-sm flex items-center justify-center gap-2 transition-all shadow-lime-sm active:scale-98"
+                className="flex-1 py-3.5 px-4 rounded-xl bg-[#8CF000] text-black font-extrabold text-sm flex items-center justify-center gap-2 transition-colors shadow-[0_0_15px_rgba(140,240,0,0.3)] hover:shadow-[0_0_22px_rgba(140,240,0,0.6)]"
               >
                 <ShoppingBag className="w-4 h-4" />
                 <span>Adicionar ao Carrinho</span>
-              </button>
+              </motion.button>
 
               {/* Favorite Button */}
-              <button
+              <motion.button
+                whileHover={{ scale: 1.08 }}
+                whileTap={{ scale: 0.88 }}
                 onClick={() => {
                   toggleFavorite(product.slug);
                   if (!favorited) toast.success('Salvo em seus favoritos!');
                 }}
                 className={`w-12 h-12 rounded-xl border flex items-center justify-center transition-colors ${
                   favorited
-                    ? 'bg-[#1C1C1C] border-[#8CF000] text-[#8CF000]'
+                    ? 'bg-[#1C1C1C] border-[#8CF000] text-[#8CF000] shadow-[0_0_12px_rgba(140,240,0,0.3)]'
                     : 'bg-[#181818] border-[#333333] text-white hover:border-[#8CF000]'
                 }`}
                 title="Favoritar"
               >
                 <Heart className={`w-5 h-5 ${favorited ? 'fill-[#8CF000]' : ''}`} />
-              </button>
+              </motion.button>
             </div>
 
             {/* Buy Now CTA */}
-            <button
+            <motion.button
+              whileHover={{ scale: 1.01, borderColor: '#8CF000' }}
+              whileTap={{ scale: 0.98 }}
               onClick={handleBuyNow}
-              className="w-full py-3.5 px-4 rounded-xl bg-[#1C1C1C] hover:bg-[#252525] border border-[#3A3A3A] hover:border-[#8CF000] text-white font-bold text-sm flex items-center justify-center gap-2 transition-all"
+              className="w-full py-3.5 px-4 rounded-xl bg-[#1C1C1C] hover:bg-[#252525] border border-[#3A3A3A] text-white font-bold text-sm flex items-center justify-center gap-2 transition-colors shadow-sm"
             >
               <Zap className="w-4 h-4 text-[#8CF000]" />
               <span>Comprar Agora</span>
-            </button>
+            </motion.button>
           </div>
 
           {/* Shipping Calculation */}
@@ -244,3 +255,4 @@ export default function ProductDetailClient({ product }: { product: ProductItem 
     </div>
   );
 }
+

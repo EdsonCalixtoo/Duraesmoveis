@@ -29,7 +29,7 @@ export default async function AdminCategoriesPage() {
             >
               <div className="relative w-16 h-16 rounded-xl overflow-hidden bg-zinc-900 border border-[#2E2E2E] flex-shrink-0">
                 <Image
-                  src={c.imageUrl || 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=200&q=80'}
+                  src={c.imageUrl || '/images/cat-poltronas.jpg'}
                   alt={c.name}
                   fill
                   className="object-cover"
@@ -51,3 +51,4 @@ export default async function AdminCategoriesPage() {
     </div>
   );
 }
+

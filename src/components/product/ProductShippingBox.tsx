@@ -90,3 +90,4 @@ export default function ProductShippingBox({ price }: { price: number }) {
     </div>
   );
 }
+

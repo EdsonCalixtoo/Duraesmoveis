@@ -1,4 +1,4 @@
-# OUTDOORSTYLE — E-COMMERCE DE MÓVEIS EXTERNOS DE ALTO PADRÃO
+# DURÃES MÓVEIS — E-COMMERCE DE MÓVEIS EXTERNOS DE ALTO PADRÃO
 
 Sistema completo de e-commerce com design **Dark Premium**, desenvolvido em **Next.js 14 (App Router)**, **TypeScript**, **Tailwind CSS**, **Prisma ORM**, **PostgreSQL / SQLite**, **Auth.js / NextAuth**, **Mercado Pago** e **Framer Motion**.
 
@@ -52,7 +52,7 @@ Fielmente projetado a partir da referência visual oficial contendo as 12 telas 
 ## 📦 Estrutura de Diretórios
 
 ```
-outdoorstyle-ecommerce/
+duraesmoveis-ecommerce/
 ├── prisma/
 │   ├── schema.prisma            # Schema ativo (SQLite por padrão para zero-config)
 │   ├── schema.postgresql.prisma # Schema pré-configurado para PostgreSQL
@@ -211,3 +211,4 @@ Para rodar em instâncias PostgreSQL no Supabase, Neon, AWS RDS, Railway ou Rend
    npx prisma db push
    npm run prisma:seed
    ```
+

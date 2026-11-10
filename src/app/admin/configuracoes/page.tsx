@@ -6,10 +6,10 @@ import { Save, ShieldCheck, Key, Truck, Store } from 'lucide-react';
 import { toast } from 'sonner';
 
 export default function AdminSettingsPage() {
-  const [storeName, setStoreName] = useState('OutdoorStyle');
+  const [storeName, setStoreName] = useState('Durães Móveis');
   const [phone, setPhone] = useState('(19) 4000-1234');
   const [whatsapp, setWhatsapp] = useState('551940001234');
-  const [email, setEmail] = useState('contato@outdoorstyle.com.br');
+  const [email, setEmail] = useState('contato@duraesmoveis.com.br');
   const [address, setAddress] = useState('Av. Norte-Sul, 1234 - Taquaral, Campinas - SP');
   const [freeShippingThreshold, setFreeShippingThreshold] = useState('2999');
   const [pixDiscountPercent, setPixDiscountPercent] = useState('5');
@@ -191,3 +191,4 @@ export default function AdminSettingsPage() {
     </div>
   );
 }
+

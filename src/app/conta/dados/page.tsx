@@ -10,7 +10,7 @@ export default function CustomerProfilePage() {
   const { data: session } = useSession();
 
   const [name, setName] = useState(session?.user?.name || 'Edson Silva');
-  const [email] = useState(session?.user?.email || 'edson@outdoorstyle.com.br');
+  const [email] = useState(session?.user?.email || 'edson@duraesmoveis.com.br');
   const [phone, setPhone] = useState('(19) 99876-5432');
   const [cpf, setCpf] = useState('123.456.789-00');
   const [isSaving, setIsSaving] = useState(false);

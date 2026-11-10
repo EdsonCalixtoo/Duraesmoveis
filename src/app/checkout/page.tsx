@@ -21,6 +21,8 @@ import {
 import { useCartStore } from '@/store/useCartStore';
 import { formatCurrency, formatCEP, formatPhone, formatCPF } from '@/lib/utils';
 import { toast } from 'sonner';
+import { motion, AnimatePresence } from 'framer-motion';
+import Logo from '@/components/common/Logo';
 
 export default function CheckoutPage() {
   const router = useRouter();
@@ -213,11 +215,7 @@ export default function CheckoutPage() {
       {/* Checkout Minimal Header */}
       <div className="border-b border-[#202020] bg-[#0C0C0C]/80 backdrop-blur-md sticky top-0 z-30">
         <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2">
-            <span className="text-lg font-black tracking-tight text-white">
-              Outdoor<span className="text-[#8CF000]">Style</span>
-            </span>
-          </Link>
+          <Logo height={36} />
 
           <div className="flex items-center gap-2 text-xs text-[#8CF000]">
             <Lock className="w-4 h-4" />
@@ -269,7 +267,15 @@ export default function CheckoutPage() {
         {/* Checkout Content Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           {/* Main Form (8 Cols) */}
-          <div className="lg:col-span-8 bg-[#141414] border border-[#2B2B2B] rounded-2xl p-6 sm:p-8 space-y-6">
+          <div className="lg:col-span-8 bg-[#141414] border border-[#2B2B2B] rounded-2xl p-6 sm:p-8 space-y-6 overflow-hidden">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={step}
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -20 }}
+                transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+              >
             {/* ETAPA 1: Identificação */}
             {step === 1 && (
               <div className="space-y-6">
@@ -713,6 +719,8 @@ export default function CheckoutPage() {
                 </div>
               </div>
             )}
+              </motion.div>
+            </AnimatePresence>
           </div>
 
           {/* Right Summary: Resumo do Pedido (4 Cols - Fiel à tela 05 do mockup) */}

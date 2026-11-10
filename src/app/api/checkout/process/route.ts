@@ -194,7 +194,7 @@ export async function POST(req: Request) {
             create: [
               {
                 status: 'PENDING',
-                note: 'Pedido realizado na loja OutdoorStyle',
+                note: 'Pedido realizado na loja Durães Móveis',
               },
             ],
           },

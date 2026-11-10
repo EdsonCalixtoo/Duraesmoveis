@@ -60,28 +60,28 @@ export default async function AdminDashboardPage() {
       name: 'Sofá Riviera',
       sales: 28,
       revenue: 150948.0,
-      image: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=150&q=80',
+      image: '/images/prod-sofa-riviera.jpg',
     },
     {
       id: '2',
       name: 'Mesa Bali',
       sales: 19,
       revenue: 40356.0,
-      image: 'https://images.unsplash.com/photo-1617806118233-18e1de247200?auto=format&fit=crop&w=150&q=80',
+      image: '/images/prod-conjunto-mesa.jpg',
     },
     {
       id: '3',
       name: 'Poltrona Trançada',
       sales: 14,
       revenue: 16786.0,
-      image: 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=150&q=80',
+      image: '/images/prod-poltrona-fibra.jpg',
     },
     {
       id: '4',
       name: 'Guarda-Sol Lateral 3m',
       sales: 12,
       revenue: 7488.0,
-      image: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=150&q=80',
+      image: '/images/prod-guarda-sol-lateral.jpg',
     },
   ];
 
@@ -267,3 +267,4 @@ export default async function AdminDashboardPage() {
     </div>
   );
 }
+

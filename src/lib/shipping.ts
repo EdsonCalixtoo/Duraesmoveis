@@ -119,10 +119,11 @@ export function calculateShippingOptions(
     {
       id: 'entrega_expressa',
       name: 'Entrega Expressa VIP',
-      carrier: 'OutdoorStyle Express Direct',
+      carrier: 'Durães Móveis Express Direct',
       price: isFree ? 89 : basePrice + 75,
       estimatedDays: Math.max(2, baseDays - 1),
       description: 'Prioridade máxima no despacho e entrega assistida para grandes volumes',
     },
   ];
 }
+

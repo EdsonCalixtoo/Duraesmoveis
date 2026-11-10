@@ -112,10 +112,10 @@ function AuthContent() {
         {/* Background Image */}
         <div className="absolute inset-0">
           <Image
-            src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1000&q=80"
-            alt="OutdoorStyle Elegance"
+            src="/images/hero-outdoor-luxury.jpg"
+            alt="Durães Móveis Elegance"
             fill
-            className="object-cover opacity-30"
+            className="object-cover opacity-35"
             sizes="500px"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A0A] via-[#111111]/80 to-transparent" />

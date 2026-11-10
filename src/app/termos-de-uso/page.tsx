@@ -11,7 +11,7 @@ export default function TermsOfUsePage() {
           <section className="space-y-2">
             <h2 className="text-base font-bold text-white">1. Objeto</h2>
             <p>
-              Estes termos regulam a aquisição de mobiliário e peças de decoração comercializados através da plataforma e-commerce OutdoorStyle.
+              Estes termos regulam a aquisição de mobiliário e peças de decoração comercializados através da plataforma e-commerce Durães Móveis.
             </p>
           </section>
 
@@ -25,7 +25,7 @@ export default function TermsOfUsePage() {
           <section className="space-y-2">
             <h2 className="text-base font-bold text-white">3. Propriedade Intelectual</h2>
             <p>
-              Todo o conteúdo visual, fotografias de produtos, marcas, logotipos e textos pertencem exclusivamente à OutdoorStyle.
+              Todo o conteúdo visual, fotografias de produtos, marcas, logotipos e textos pertencem exclusivamente à Durães Móveis.
             </p>
           </section>
         </div>

@@ -81,7 +81,7 @@ export default async function AdminProductsPage({
                 {products.map((p) => {
                   const coverImg =
                     p.images[0]?.url ||
-                    'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=150&q=80';
+                    '/images/prod-sofa-riviera.jpg';
 
                   return (
                     <tr key={p.id} className="hover:bg-[#191919] transition-colors">
@@ -131,3 +131,4 @@ export default async function AdminProductsPage({
     </div>
   );
 }
+

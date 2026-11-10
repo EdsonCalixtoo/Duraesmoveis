@@ -59,3 +59,4 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: 'Erro interno no processamento' }, { status: 500 });
   }
 }
+

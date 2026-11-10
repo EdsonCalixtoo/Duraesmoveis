@@ -29,11 +29,11 @@ async function main() {
   console.log('Criando configurações da loja...');
   await prisma.storeSetting.createMany({
     data: [
-      { key: 'STORE_NAME', value: 'OutdoorStyle', description: 'Nome da loja' },
+      { key: 'STORE_NAME', value: 'Durães Móveis', description: 'Nome da loja' },
       { key: 'STORE_TAGLINE', value: 'Móveis Externos Premium', description: 'Slogan da loja' },
       { key: 'STORE_PHONE', value: '(19) 4000-1234', description: 'Telefone comercial' },
       { key: 'STORE_WHATSAPP', value: '551940001234', description: 'WhatsApp oficial' },
-      { key: 'STORE_EMAIL', value: 'contato@outdoorstyle.com.br', description: 'E-mail de atendimento' },
+      { key: 'STORE_EMAIL', value: 'contato@duraesmoveis.com.br', description: 'E-mail de atendimento' },
       { key: 'STORE_ADDRESS', value: 'Av. Norte-Sul, 1234 - Taquaral, Campinas - SP', description: 'Endereço físico' },
       { key: 'FREE_SHIPPING_THRESHOLD', value: '2999', description: 'Valor mínimo para frete grátis' },
       { key: 'PIX_DISCOUNT_PERCENT', value: '5', description: 'Desconto à vista no Pix (%)' },
@@ -91,7 +91,7 @@ async function main() {
         name: 'Poltronas',
         slug: 'poltronas',
         description: 'Poltronas para jardim, varanda e piscinas com estrutura em alumínio e corda náutica.',
-        imageUrl: 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=400&q=80',
+        imageUrl: '/images/cat-poltronas.jpg',
         displayOrder: 1,
       },
     }),
@@ -100,7 +100,7 @@ async function main() {
         name: 'Mesas e Cadeiras',
         slug: 'mesas-e-cadeiras',
         description: 'Conjuntos de jantar e mesas para áreas externas com tampos em madeira teca e vidro temperado.',
-        imageUrl: 'https://images.unsplash.com/photo-1617806118233-18e1de247200?auto=format&fit=crop&w=400&q=80',
+        imageUrl: '/images/cat-mesas-cadeiras.jpg',
         displayOrder: 2,
       },
     }),
@@ -109,7 +109,7 @@ async function main() {
         name: 'Espreguiçadeiras',
         slug: 'espreguicadeiras',
         description: 'Espreguiçadeiras reclináveis para borda de piscina e decks, com tecido sling e almofadas náuticas.',
-        imageUrl: 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=400&q=80',
+        imageUrl: '/images/cat-espreguicadeiras.jpg',
         displayOrder: 3,
       },
     }),
@@ -118,7 +118,7 @@ async function main() {
         name: 'Sofás Externos',
         slug: 'sofas-externos',
         description: 'Sofás modulares e de 2 a 4 lugares com estofados impermeáveis e acabamento de alto padrão.',
-        imageUrl: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=400&q=80',
+        imageUrl: '/images/cat-sofas-externos.jpg',
         displayOrder: 4,
       },
     }),
@@ -127,7 +127,7 @@ async function main() {
         name: 'Guarda-Sóis',
         slug: 'guarda-sois',
         description: 'Guarda-sóis laterais e centrais com estrutura em alumínio giratório 360° e proteção solar UV 50+.',
-        imageUrl: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=400&q=80',
+        imageUrl: '/images/cat-guarda-sois.jpg',
         displayOrder: 5,
       },
     }),
@@ -136,7 +136,7 @@ async function main() {
         name: 'Acessórios',
         slug: 'acessorios',
         description: 'Lareiras de jardim, capas protetoras, luminárias solares e almofadas decorativas impermeáveis.',
-        imageUrl: 'https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=400&q=80',
+        imageUrl: '/images/cat-acessorios.jpg',
         displayOrder: 6,
       },
     }),
@@ -174,24 +174,24 @@ async function main() {
       images: {
         create: [
           {
-            url: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80',
+            url: '/images/prod-sofa-riviera.jpg',
             alt: 'Sofá Externo Riviera 3 Lugares - Vista Principal Jardim',
             displayOrder: 1,
             isCover: true,
           },
           {
-            url: 'https://images.unsplash.com/photo-1540518614846-7ede433c4ef0?auto=format&fit=crop&w=1200&q=80',
-            alt: 'Sofá Externo Riviera 3 Lugares - Detalhe da Trama Náutica',
+            url: '/images/hero-outdoor-luxury.jpg',
+            alt: 'Sofá Externo Riviera 3 Lugares - Vista Noturna Deck Iluminado',
             displayOrder: 2,
           },
           {
-            url: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=1200&q=80',
-            alt: 'Sofá Externo Riviera 3 Lugares - Almofadas Impermeáveis',
+            url: '/images/cat-sofas-externos.jpg',
+            alt: 'Sofá Externo Riviera 3 Lugares - Detalhe da Trama Náutica',
             displayOrder: 3,
           },
           {
-            url: 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=1200&q=80',
-            alt: 'Sofá Externo Riviera 3 Lugares - Vista Noturna Deck Iluminado',
+            url: '/images/prod-sofa-3-lugares.jpg',
+            alt: 'Sofá Externo Riviera 3 Lugares - Almofadas Impermeáveis',
             displayOrder: 4,
           },
         ],
@@ -232,13 +232,13 @@ async function main() {
       images: {
         create: [
           {
-            url: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=1200&q=80',
+            url: '/images/prod-sofa-cayenne.jpg',
             alt: 'Sofá Modular Cayenne 4 Lugares',
             displayOrder: 1,
             isCover: true,
           },
           {
-            url: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80',
+            url: '/images/hero-outdoor-luxury.jpg',
             alt: 'Sofá Modular Cayenne Ambiente Externo',
             displayOrder: 2,
           },
@@ -277,7 +277,7 @@ async function main() {
       images: {
         create: [
           {
-            url: 'https://images.unsplash.com/photo-1540518614846-7ede433c4ef0?auto=format&fit=crop&w=1200&q=80',
+            url: '/images/prod-sofa-firenze.jpg',
             alt: 'Sofá Firenze 2 Lugares',
             displayOrder: 1,
             isCover: true,
@@ -316,7 +316,7 @@ async function main() {
       images: {
         create: [
           {
-            url: 'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=1200&q=80',
+            url: '/images/prod-sofa-mare.jpg',
             alt: 'Sofá Outdoor Maré 3 Lugares',
             displayOrder: 1,
             isCover: true,
@@ -332,7 +332,7 @@ async function main() {
     },
   });
 
-  // Produto 5: Poltrona de Fibra Sintética Premium
+  // Produto 5: Poltrona de Fibra Sintética Premium (Mais Vendidos #1)
   await prisma.product.create({
     data: {
       name: 'Poltrona de Fibra Sintética Premium',
@@ -348,17 +348,22 @@ async function main() {
       active: true,
       featured: true,
       rating: 4.9,
-      reviewsCount: 54,
+      reviewsCount: 154,
       materials: 'Fibra sintética marrom acobreado, Alumínio estrutural',
       dimensions: '82 cm (L) x 80 cm (P) x 78 cm (A)',
       weightKg: 11.5,
       images: {
         create: [
           {
-            url: 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=1200&q=80',
+            url: '/images/prod-poltrona-fibra.jpg',
             alt: 'Poltrona de Fibra Sintética Premium',
             displayOrder: 1,
             isCover: true,
+          },
+          {
+            url: '/images/cat-poltronas.jpg',
+            alt: 'Poltrona de Fibra Sintética - Detalhe',
+            displayOrder: 2,
           },
         ],
       },
@@ -371,7 +376,7 @@ async function main() {
     },
   });
 
-  // Produto 6: Conjunto Mesa e Cadeiras para Jardim
+  // Produto 6: Conjunto Mesa e Cadeiras para Jardim (Mais Vendidos #2)
   await prisma.product.create({
     data: {
       name: 'Conjunto Mesa e Cadeiras para Jardim',
@@ -387,17 +392,22 @@ async function main() {
       active: true,
       featured: true,
       rating: 5.0,
-      reviewsCount: 31,
+      reviewsCount: 142,
       materials: 'Alumínio fosco, Vidro temperado serigrafado, Tela sling',
       dimensions: 'Mesa: 180cm x 90cm x 75cm / Cadeira: 56cm x 60cm x 88cm',
       weightKg: 48.0,
       images: {
         create: [
           {
-            url: 'https://images.unsplash.com/photo-1617806118233-18e1de247200?auto=format&fit=crop&w=1200&q=80',
+            url: '/images/prod-conjunto-mesa.jpg',
             alt: 'Conjunto Mesa e Cadeiras para Jardim',
             displayOrder: 1,
             isCover: true,
+          },
+          {
+            url: '/images/cat-mesas-cadeiras.jpg',
+            alt: 'Conjunto Mesa e Cadeiras Detalhe',
+            displayOrder: 2,
           },
         ],
       },
@@ -410,7 +420,7 @@ async function main() {
     },
   });
 
-  // Produto 7: Espreguiçadeira Alumínio com Tela Sling
+  // Produto 7: Espreguiçadeira Alumínio com Tela Sling (Mais Vendidos #3)
   await prisma.product.create({
     data: {
       name: 'Espreguiçadeira Alumínio com Tela Sling',
@@ -426,17 +436,22 @@ async function main() {
       active: true,
       featured: true,
       rating: 4.8,
-      reviewsCount: 29,
+      reviewsCount: 135,
       materials: 'Alumínio eletrostático, Tela sling respirável antibacteriana',
       dimensions: '195 cm (C) x 65 cm (L) x 35 cm (A)',
       weightKg: 8.5,
       images: {
         create: [
           {
-            url: 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=1200&q=80',
+            url: '/images/prod-espreguicadeira-sling.jpg',
             alt: 'Espreguiçadeira Alumínio com Tela Sling',
             displayOrder: 1,
             isCover: true,
+          },
+          {
+            url: '/images/cat-espreguicadeiras.jpg',
+            alt: 'Espreguiçadeira Alumínio Piscina',
+            displayOrder: 2,
           },
         ],
       },
@@ -449,7 +464,51 @@ async function main() {
     },
   });
 
-  // Produto 8: Guarda-Sol Lateral Ø 3m (Presente no carrinho do card 04 e pedido do card 08)
+  // Produto 8: Sofá Externo 3 Lugares com Almofadas (Mais Vendidos #4)
+  await prisma.product.create({
+    data: {
+      name: 'Sofá Externo 3 Lugares com Almofadas',
+      slug: 'sofa-externo-3-lugares-com-almofadas',
+      sku: 'SOF-ALM-003',
+      categoryId: catMap['sofas-externos'],
+      description: 'Sofá de 3 lugares com design contemporâneo, almofadas densas e repelentes à água, ideal para momentos de relaxamento em varandas e jardins.',
+      shortDescription: 'Sofá externo com almofadas impermeáveis e estrutura em alumínio eletrostático fosco.',
+      price: 2659.00,
+      originalPrice: 3249.00,
+      discountPercent: 18,
+      stock: 12,
+      active: true,
+      featured: true,
+      rating: 4.9,
+      reviewsCount: 128,
+      materials: 'Alumínio naval, Tecido poliéster impermeável, Espuma D-33',
+      dimensions: '215 cm (L) x 85 cm (P) x 70 cm (A)',
+      weightKg: 30.0,
+      images: {
+        create: [
+          {
+            url: '/images/prod-sofa-3-lugares.jpg',
+            alt: 'Sofá Externo 3 Lugares com Almofadas',
+            displayOrder: 1,
+            isCover: true,
+          },
+          {
+            url: '/images/cat-sofas-externos.jpg',
+            alt: 'Sofá Externo 3 Lugares Varanda',
+            displayOrder: 2,
+          },
+        ],
+      },
+      variants: {
+        create: [
+          { name: 'Taupe', colorName: 'Taupe', colorHex: '#8C7A6B', stock: 7, sku: 'SOF-ALM-003-TAU' },
+          { name: 'Grafite', colorName: 'Grafite', colorHex: '#2B2B2B', stock: 5, sku: 'SOF-ALM-003-GRA' },
+        ],
+      },
+    },
+  });
+
+  // Produto 9: Guarda-Sol Lateral Ø 3m (Mais Vendidos #5)
   const guardaSul = await prisma.product.create({
     data: {
       name: 'Guarda-Sol Lateral Ø 3m',
@@ -465,17 +524,22 @@ async function main() {
       active: true,
       featured: true,
       rating: 4.8,
-      reviewsCount: 63,
+      reviewsCount: 110,
       materials: 'Haste em alumínio anodizado, Cobertura em poliéster hidro-repelente 250g',
       dimensions: 'Diâmetro 300 cm x Altura 250 cm',
       weightKg: 18.0,
       images: {
         create: [
           {
-            url: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1200&q=80',
+            url: '/images/prod-guarda-sol-lateral.jpg',
             alt: 'Guarda-Sol Lateral Ø 3m',
             displayOrder: 1,
             isCover: true,
+          },
+          {
+            url: '/images/cat-guarda-sois.jpg',
+            alt: 'Guarda-Sol Lateral Articulado',
+            displayOrder: 2,
           },
         ],
       },
@@ -499,7 +563,7 @@ async function main() {
         subtitle: 'Móveis externos com design moderno, qualidade premium e conforto incomparável.',
         buttonText: 'Ver Coleção Completa',
         buttonLink: '/catalogo',
-        imageUrl: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1920&q=80',
+        imageUrl: '/images/hero-outdoor-luxury.jpg',
         active: true,
         displayOrder: 1,
         position: 'HERO',
@@ -510,7 +574,7 @@ async function main() {
         subtitle: 'Estruturas em alumínio naval e cordas náuticas com 5 anos de garantia de fábrica.',
         buttonText: 'Conhecer Linha Náutica',
         buttonLink: '/categoria/sofas-externos',
-        imageUrl: 'https://images.unsplash.com/photo-1540518614846-7ede433c4ef0?auto=format&fit=crop&w=1920&q=80',
+        imageUrl: '/images/banner-oferta-especial.jpg',
         active: true,
         displayOrder: 2,
         position: 'HERO',
@@ -593,7 +657,7 @@ async function main() {
             productId: sofaRiviera.id,
             variantId: taupeVariant ? taupeVariant.id : null,
             productName: 'Sofá Externo Riviera 3 Lugares',
-            productImage: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=400&q=80',
+            productImage: '/images/prod-sofa-riviera.jpg',
             variantName: 'Cor: Taupe',
             price: 5391.00,
             quantity: 1,
@@ -603,7 +667,7 @@ async function main() {
             productId: guardaSul.id,
             variantId: beigeGuardaSol ? beigeGuardaSol.id : null,
             productName: 'Guarda-Sol Lateral Ø 3m',
-            productImage: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=400&q=80',
+            productImage: '/images/prod-guarda-sol-lateral.jpg',
             variantName: 'Cor: Bege',
             price: 624.00,
             quantity: 1,
@@ -724,3 +788,4 @@ main()
   .finally(async () => {
     await prisma.$disconnect();
   });
+

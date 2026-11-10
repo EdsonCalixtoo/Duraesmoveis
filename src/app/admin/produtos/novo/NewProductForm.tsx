@@ -25,9 +25,7 @@ export default function NewProductForm({ categories }: { categories: CategoryIte
   const [dimensions, setDimensions] = useState('');
   const [weightKg, setWeightKg] = useState('25');
   const [featured, setFeatured] = useState(false);
-  const [imageUrl, setImageUrl] = useState(
-    'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80'
-  );
+  const [imageUrl, setImageUrl] = useState('/images/prod-sofa-riviera.jpg');
 
   // Variantes
   const [variants, setVariants] = useState([
@@ -361,3 +359,4 @@ export default function NewProductForm({ categories }: { categories: CategoryIte
     </form>
   );
 }
+

@@ -5,25 +5,34 @@ import CartDrawer from '@/components/common/CartDrawer';
 import ShopChrome from '@/components/common/ShopChrome';
 
 export const metadata: Metadata = {
-  title: 'OutdoorStyle — Móveis para Áreas Externas de Alto Padrão',
+  title: 'Durães Móveis — Móveis para Áreas Externas de Alto Padrão',
   description:
-    'E-commerce de móveis para áreas externas. Sofás, poltronas, espreguiçadeiras e ombrelones com design contemporâneo, resistência ao tempo e máxima sofisticação.',
+    'Durães Móveis: E-commerce especializado em móveis para áreas externas. Sofás, poltronas, espreguiçadeiras e conjuntos de jantar com design contemporâneo, resistência ao tempo e máxima sofisticação.',
   keywords: [
+    'durães móveis',
+    'duraes moveis',
     'móveis externos',
     'sofá para jardim',
     'corda náutica',
     'espreguiçadeira piscina',
     'móveis de luxo',
-    'outdoor style',
   ],
-  authors: [{ name: 'OutdoorStyle' }],
+  authors: [{ name: 'Durães Móveis' }],
   metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'),
   openGraph: {
-    title: 'OutdoorStyle — Móveis Externos Premium',
-    description: 'Transforme seu espaço externo em um ambiente incrível.',
+    title: 'Durães Móveis — Móveis Externos Premium',
+    description: 'Transforme seu espaço externo com a elegância incomparável da Durães Móveis.',
     type: 'website',
     locale: 'pt_BR',
-    siteName: 'OutdoorStyle',
+    siteName: 'Durães Móveis',
+  },
+  icons: {
+    icon: [
+      { url: '/icon.png', sizes: '512x512', type: 'image/png' },
+      { url: '/favicon.ico', sizes: 'any' },
+    ],
+    shortcut: '/icon.png',
+    apple: '/apple-icon.png',
   },
 };
 
