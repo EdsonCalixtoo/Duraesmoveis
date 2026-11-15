@@ -18,86 +18,62 @@ export async function GET() {
       prisma.order.count(),
       prisma.user.count({ where: { role: 'CUSTOMER' } }),
       prisma.order.findMany({
-        select: {
-          id: true,
-          total: true,
-          status: true,
-          createdAt: true,
-        },
+        include: { items: true },
       }),
     ]);
 
-    const revenueFromOrders = orders
-      .filter((o) => o.status !== 'CANCELLED')
-      .reduce((sum, o) => sum + o.total, 0);
+    const validOrders = orders.filter((o) => o.status !== 'CANCELLED');
+    const revenueFromOrders = validOrders.reduce((sum, o) => sum + o.total, 0);
+    const averageTicket = validOrders.length > 0 ? revenueFromOrders / validOrders.length : 0;
 
-    // Conforme layout do Card 12: Faturamento R$ 124.320,00, Pedidos 142, Ticket Médio R$ 875,21, Clientes 1.248
-    const baseRevenue = 124320.00 + revenueFromOrders;
-    const baseOrdersCount = 142 + totalOrders;
-    const baseCustomersCount = 1248 + totalCustomers;
-    const averageTicket = baseRevenue / (baseOrdersCount || 1);
+    const salesByDayMap = new Map<string, number>();
+    for (const ord of validOrders) {
+      const dt = new Date(ord.createdAt);
+      const label = dt.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
+      salesByDayMap.set(label, (salesByDayMap.get(label) || 0) + Number(ord.total || 0));
+    }
 
-    // Gráfico de vendas dos últimos 30 dias (30 pontos de dados)
-    const salesChart = [
-      { day: '01', sales: 3200 },
-      { day: '03', sales: 4100 },
-      { day: '05', sales: 2900 },
-      { day: '07', sales: 5400 },
-      { day: '09', sales: 4800 },
-      { day: '11', sales: 6100 },
-      { day: '13', sales: 3900 },
-      { day: '15', sales: 7200 },
-      { day: '17', sales: 5800 },
-      { day: '19', sales: 6900 },
-      { day: '21', sales: 8400 },
-      { day: '23', sales: 7100 },
-      { day: '25', sales: 9200 },
-      { day: '27', sales: 8100 },
-      { day: '29', sales: 10400 },
-      { day: '30', sales: 11200 },
-    ];
+    const salesChart = Array.from(salesByDayMap.entries()).map(([day, sales]) => ({
+      day,
+      sales,
+    }));
 
-    // Produtos mais vendidos
-    const topProducts = [
-      {
-        id: '1',
-        name: 'Sofá Riviera',
-        salesCount: 28,
-        revenue: 150948.00,
-        image: '/images/prod-sofa-riviera.jpg',
-      },
-      {
-        id: '2',
-        name: 'Mesa Bali',
-        salesCount: 19,
-        revenue: 40356.00,
-        image: '/images/prod-conjunto-mesa.jpg',
-      },
-      {
-        id: '3',
-        name: 'Poltrona Trançada',
-        salesCount: 14,
-        revenue: 16786.00,
-        image: '/images/prod-poltrona-fibra.jpg',
-      },
-      {
-        id: '4',
-        name: 'Guarda-Sol Lateral 3m',
-        salesCount: 12,
-        revenue: 7488.00,
-        image: '/images/prod-guarda-sol-lateral.jpg',
-      },
-    ];
+    const productSalesMap = new Map<
+      string,
+      { id: string; name: string; salesCount: number; revenue: number; image: string }
+    >();
+
+    for (const ord of validOrders) {
+      for (const item of ord.items) {
+        const existing = productSalesMap.get(item.productId);
+        if (existing) {
+          existing.salesCount += item.quantity;
+          existing.revenue += item.total;
+        } else {
+          productSalesMap.set(item.productId, {
+            id: item.productId,
+            name: item.productName,
+            salesCount: item.quantity,
+            revenue: item.total,
+            image: item.productImage || '/images/prod-sofa-riviera.jpg',
+          });
+        }
+      }
+    }
+
+    const topProducts = Array.from(productSalesMap.values())
+      .sort((a, b) => b.revenue - a.revenue)
+      .slice(0, 4);
 
     return NextResponse.json({
-      revenue: baseRevenue,
-      revenueGrowth: '+12.3%',
-      ordersCount: baseOrdersCount,
-      ordersGrowth: '+8.2%',
+      revenue: revenueFromOrders,
+      revenueGrowth: `${validOrders.length} pedidos válidos`,
+      ordersCount: totalOrders,
+      ordersGrowth: 'Sincronizado com Supabase',
       averageTicket,
-      ticketGrowth: '+4.1%',
-      customersCount: baseCustomersCount,
-      customersGrowth: '+11.3%',
+      ticketGrowth: 'Média real',
+      customersCount: totalCustomers,
+      customersGrowth: 'Base ativa',
       salesChart,
       topProducts,
     });

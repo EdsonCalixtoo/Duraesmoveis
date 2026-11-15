@@ -1,8 +1,8 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import AdminHeader from '@/components/admin/AdminHeader';
-import { Save, ShieldCheck, Key, Truck, Store } from 'lucide-react';
+import { Save, Key, Truck, Store } from 'lucide-react';
 import { toast } from 'sonner';
 
 export default function AdminSettingsPage() {
@@ -15,29 +15,66 @@ export default function AdminSettingsPage() {
   const [pixDiscountPercent, setPixDiscountPercent] = useState('5');
   const [maxInstallments, setMaxInstallments] = useState('12');
 
-  const [mpPublicKey, setMpPublicKey] = useState(
-    'TEST-00000000-0000-0000-0000-000000000000'
-  );
-  const [mpAccessToken, setMpAccessToken] = useState(
-    'TEST-0000000000000000-000000-00000000000000000000000000000000-000000000'
-  );
+  const [mpPublicKey, setMpPublicKey] = useState('');
+  const [mpAccessToken, setMpAccessToken] = useState('');
 
+  const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
 
-  const handleSave = (e: React.FormEvent) => {
+  useEffect(() => {
+    fetch('/api/admin/settings')
+      .then((r) => r.json())
+      .then((data) => {
+        const s = data?.settings || {};
+        if (s.STORE_NAME) setStoreName(s.STORE_NAME);
+        if (s.STORE_PHONE) setPhone(s.STORE_PHONE);
+        if (s.STORE_WHATSAPP) setWhatsapp(s.STORE_WHATSAPP);
+        if (s.STORE_EMAIL) setEmail(s.STORE_EMAIL);
+        if (s.STORE_ADDRESS) setAddress(s.STORE_ADDRESS);
+        if (s.FREE_SHIPPING_THRESHOLD) setFreeShippingThreshold(s.FREE_SHIPPING_THRESHOLD);
+        if (s.PIX_DISCOUNT_PERCENT) setPixDiscountPercent(s.PIX_DISCOUNT_PERCENT);
+        if (s.MAX_INSTALLMENTS) setMaxInstallments(s.MAX_INSTALLMENTS);
+        if (s.MERCADOPAGO_PUBLIC_KEY) setMpPublicKey(s.MERCADOPAGO_PUBLIC_KEY);
+        if (s.MERCADOPAGO_ACCESS_TOKEN) setMpAccessToken(s.MERCADOPAGO_ACCESS_TOKEN);
+      })
+      .catch(() => {})
+      .finally(() => setLoading(false));
+  }, []);
+
+  const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
     setSaving(true);
-    setTimeout(() => {
+    try {
+      const res = await fetch('/api/admin/settings', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          STORE_NAME: storeName,
+          STORE_PHONE: phone,
+          STORE_WHATSAPP: whatsapp,
+          STORE_EMAIL: email,
+          STORE_ADDRESS: address,
+          FREE_SHIPPING_THRESHOLD: freeShippingThreshold,
+          PIX_DISCOUNT_PERCENT: pixDiscountPercent,
+          MAX_INSTALLMENTS: maxInstallments,
+          ...(mpPublicKey ? { MERCADOPAGO_PUBLIC_KEY: mpPublicKey } : {}),
+          ...(mpAccessToken ? { MERCADOPAGO_ACCESS_TOKEN: mpAccessToken } : {}),
+        }),
+      });
+      if (!res.ok) throw new Error('Falha ao salvar');
+      toast.success('Configurações salvas no banco de dados Supabase com sucesso!');
+    } catch {
+      toast.error('Não foi possível salvar as configurações.');
+    } finally {
       setSaving(false);
-      toast.success('Configurações atualizadas com sucesso!');
-    }, 500);
+    }
   };
 
   return (
     <div className="space-y-6 pb-16">
       <AdminHeader
         title="Configurações da Loja"
-        subtitle="Gerencie credenciais de pagamento, dados da empresa e regras comerciais."
+        subtitle="Gerencie credenciais do Mercado Pago, dados da empresa e regras comerciais salvas no Supabase."
       />
 
       <div className="px-6 sm:px-8 max-w-4xl">
@@ -110,14 +147,15 @@ export default function AdminSettingsPage() {
             </div>
 
             <p className="text-xs text-[#A3A3A3] leading-relaxed">
-              Obtenha suas credenciais de produção ou testes no Portal de Desenvolvedores do Mercado Pago (mercadopago.com.br/developers).
+              Cole abaixo suas credenciais de produção (<code className="text-[#8CF000]">APP_USR-...</code>) ou testes (<code className="text-[#8CF000]">TEST-...</code>) do Portal de Desenvolvedores do Mercado Pago. Elas serão salvas com segurança no banco de dados Supabase e usadas imediatamente no checkout.
             </p>
 
             <div className="space-y-3">
               <div className="space-y-1.5">
-                <label className="text-xs font-semibold text-[#A3A3A3]">Public Key</label>
+                <label className="text-xs font-semibold text-[#A3A3A3]">Public Key (Mercado Pago)</label>
                 <input
                   type="text"
+                  placeholder="APP_USR-xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
                   value={mpPublicKey}
                   onChange={(e) => setMpPublicKey(e.target.value)}
                   className="w-full bg-[#1C1C1C] border border-[#303030] rounded-xl px-4 py-2.5 text-xs text-white font-mono"
@@ -125,9 +163,10 @@ export default function AdminSettingsPage() {
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-xs font-semibold text-[#A3A3A3]">Access Token</label>
+                <label className="text-xs font-semibold text-[#A3A3A3]">Access Token (Mercado Pago)</label>
                 <input
                   type="password"
+                  placeholder="APP_USR-0000000000000000-000000-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx-000000000"
                   value={mpAccessToken}
                   onChange={(e) => setMpAccessToken(e.target.value)}
                   className="w-full bg-[#1C1C1C] border border-[#303030] rounded-xl px-4 py-2.5 text-xs text-white font-mono"
@@ -179,11 +218,11 @@ export default function AdminSettingsPage() {
           <div className="flex justify-end pt-2">
             <button
               type="submit"
-              disabled={saving}
+              disabled={saving || loading}
               className="px-8 py-3.5 rounded-xl bg-[#8CF000] hover:bg-[#A3FF12] text-black font-extrabold text-xs flex items-center gap-2 transition-all shadow-lime-sm disabled:opacity-50"
             >
               <Save className="w-4 h-4" />
-              <span>{saving ? 'Salvando...' : 'Salvar Todas as Configurações'}</span>
+              <span>{saving ? 'Salvando no Supabase...' : 'Salvar Todas as Configurações'}</span>
             </button>
           </div>
         </form>
@@ -191,4 +230,3 @@ export default function AdminSettingsPage() {
     </div>
   );
 }
-

@@ -9,7 +9,7 @@ import Testimonials from '@/components/home/Testimonials';
 import Newsletter from '@/components/home/Newsletter';
 import { ProductItem } from '@/types';
 
-export const revalidate = 60; // ISR 60s
+export const dynamic = 'force-dynamic';
 
 export default async function HomePage() {
   let products: unknown[] = [];

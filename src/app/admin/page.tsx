@@ -5,98 +5,110 @@ import { prisma } from '@/lib/prisma';
 import AdminHeader from '@/components/admin/AdminHeader';
 import SalesBarChart from '@/components/admin/SalesBarChart';
 import { formatCurrency, formatDate } from '@/lib/utils';
-import { ArrowUpRight, ArrowRight, Package, Users, DollarSign, TrendingUp } from 'lucide-react';
+import { ArrowUpRight, ArrowRight } from 'lucide-react';
 
 export const dynamic = 'force-dynamic';
 
 export default async function AdminDashboardPage() {
-  const [totalOrders, totalCustomers, totalProducts, recentOrders] = await Promise.all([
+  const [totalOrders, totalCustomers, totalProducts, allOrders, allProducts] = await Promise.all([
     prisma.order.count(),
     prisma.user.count({ where: { role: 'CUSTOMER' } }),
     prisma.product.count({ where: { active: true } }),
     prisma.order.findMany({
-      take: 5,
       orderBy: { createdAt: 'desc' },
       include: { items: true },
     }),
+    prisma.product.findMany({
+      where: { active: true },
+      orderBy: { reviewsCount: 'desc' },
+      take: 4,
+      include: { images: { orderBy: { displayOrder: 'asc' }, take: 1 } },
+    }),
   ]);
 
-  // Indicadores fixos/dinâmicos fiéis à tela 12 do mockup
+  const validOrders = allOrders.filter((o) => o.status !== 'CANCELLED');
+  const realRevenue = validOrders.reduce((sum, o) => sum + Number(o.total || 0), 0);
+  const averageTicket = validOrders.length > 0 ? realRevenue / validOrders.length : 0;
+  const recentOrders = allOrders.slice(0, 5);
+
   const kpiData = {
-    revenue: 124320.00,
-    revenueGrowth: '+12.3%',
-    ordersCount: 142 + totalOrders,
-    ordersGrowth: '+8.2%',
-    averageTicket: 875.21,
-    ticketGrowth: '+4.1%',
-    customersCount: 1248 + totalCustomers,
-    customersGrowth: '+11.3%',
+    revenue: realRevenue,
+    revenueGrowth: `${validOrders.length} pedidos pagos`,
+    ordersCount: totalOrders,
+    ordersGrowth: `${totalProducts} produtos ativos`,
+    averageTicket,
+    ticketGrowth: 'Média real por pedido',
+    customersCount: totalCustomers,
+    customersGrowth: 'Base Supabase ativa',
   };
 
-  // Dados para o gráfico de vendas dos últimos 30 dias
-  const salesChartData = [
-    { day: '01', sales: 3200 },
-    { day: '03', sales: 4100 },
-    { day: '05', sales: 2900 },
-    { day: '07', sales: 5400 },
-    { day: '09', sales: 4800 },
-    { day: '11', sales: 6100 },
-    { day: '13', sales: 3900 },
-    { day: '15', sales: 7200 },
-    { day: '17', sales: 5800 },
-    { day: '19', sales: 6900 },
-    { day: '21', sales: 8400 },
-    { day: '23', sales: 7100 },
-    { day: '25', sales: 9200 },
-    { day: '27', sales: 8100 },
-    { day: '29', sales: 10400 },
-    { day: '30', sales: 11200 },
-  ];
+  // Agregar vendas reais por dia a partir dos pedidos no banco
+  const salesByDayMap = new Map<string, number>();
+  for (const ord of validOrders) {
+    const dt = new Date(ord.createdAt);
+    const label = dt.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
+    salesByDayMap.set(label, (salesByDayMap.get(label) || 0) + Number(ord.total || 0));
+  }
 
-  // Produtos mais vendidos (Fiel à tela 12)
-  const topProducts = [
-    {
-      id: '1',
-      name: 'Sofá Riviera',
-      sales: 28,
-      revenue: 150948.0,
-      image: '/images/prod-sofa-riviera.jpg',
-    },
-    {
-      id: '2',
-      name: 'Mesa Bali',
-      sales: 19,
-      revenue: 40356.0,
-      image: '/images/prod-conjunto-mesa.jpg',
-    },
-    {
-      id: '3',
-      name: 'Poltrona Trançada',
-      sales: 14,
-      revenue: 16786.0,
-      image: '/images/prod-poltrona-fibra.jpg',
-    },
-    {
-      id: '4',
-      name: 'Guarda-Sol Lateral 3m',
-      sales: 12,
-      revenue: 7488.0,
-      image: '/images/prod-guarda-sol-lateral.jpg',
-    },
-  ];
+  const salesChartData =
+    salesByDayMap.size > 0
+      ? Array.from(salesByDayMap.entries())
+          .reverse()
+          .map(([day, sales]) => ({ day, sales }))
+      : [{ day: 'Hoje', sales: 0 }];
+
+  // Calcular produtos mais vendidos a partir dos OrderItems reais + catálogo real
+  const productSalesMap = new Map<
+    string,
+    { id: string; name: string; sales: number; revenue: number; image: string }
+  >();
+
+  for (const ord of validOrders) {
+    for (const item of ord.items) {
+      const existing = productSalesMap.get(item.productId);
+      if (existing) {
+        existing.sales += item.quantity;
+        existing.revenue += item.total;
+      } else {
+        productSalesMap.set(item.productId, {
+          id: item.productId,
+          name: item.productName,
+          sales: item.quantity,
+          revenue: item.total,
+          image: item.productImage || '/images/prod-sofa-riviera.jpg',
+        });
+      }
+    }
+  }
+
+  for (const p of allProducts) {
+    if (!productSalesMap.has(p.id) && productSalesMap.size < 4) {
+      productSalesMap.set(p.id, {
+        id: p.id,
+        name: p.name,
+        sales: 0,
+        revenue: 0,
+        image: p.images[0]?.url || '/images/prod-sofa-riviera.jpg',
+      });
+    }
+  }
+
+  const topProducts = Array.from(productSalesMap.values())
+    .sort((a, b) => b.revenue - a.revenue)
+    .slice(0, 4);
 
   return (
     <div className="space-y-8 pb-16">
       {/* Top Header */}
-      <AdminHeader title="Dashboard" subtitle="Visão geral da sua loja." />
+      <AdminHeader title="Dashboard" subtitle="Visão geral em tempo real da sua loja (Supabase)." />
 
       <div className="px-6 sm:px-8 space-y-8">
-        {/* 4 Métricas Chave (Fiel à tela 12 do mockup) */}
+        {/* 4 Métricas Chave Reais */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {/* Vendas */}
           <div className="p-5 rounded-2xl bg-[#141414] border border-[#2B2B2B] space-y-2">
             <div className="flex items-center justify-between text-xs text-[#A3A3A3]">
-              <span>Vendas</span>
+              <span>Faturamento Real</span>
               <span className="px-2 py-0.5 rounded-full bg-[#8CF000]/10 text-[#8CF000] font-bold text-[11px] flex items-center gap-0.5">
                 <ArrowUpRight className="w-3 h-3" />
                 {kpiData.revenueGrowth}
@@ -110,7 +122,7 @@ export default async function AdminDashboardPage() {
           {/* Pedidos */}
           <div className="p-5 rounded-2xl bg-[#141414] border border-[#2B2B2B] space-y-2">
             <div className="flex items-center justify-between text-xs text-[#A3A3A3]">
-              <span>Pedidos</span>
+              <span>Pedidos Realizados</span>
               <span className="px-2 py-0.5 rounded-full bg-[#8CF000]/10 text-[#8CF000] font-bold text-[11px] flex items-center gap-0.5">
                 <ArrowUpRight className="w-3 h-3" />
                 {kpiData.ordersGrowth}
@@ -150,16 +162,16 @@ export default async function AdminDashboardPage() {
           </div>
         </div>
 
-        {/* Charts & Top Products Grid (Fiel à tela 12) */}
+        {/* Charts & Top Products Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
           {/* Chart Vendas (8 Cols) */}
           <div className="lg:col-span-8 bg-[#141414] border border-[#2B2B2B] rounded-2xl p-6 space-y-4">
             <div className="flex items-center justify-between">
               <div>
-                <h3 className="text-base font-bold text-white">Vendas (Últimos 30 dias)</h3>
-                <span className="text-xs text-[#8E8E8E]">Evolução diária de faturamento</span>
+                <h3 className="text-base font-bold text-white">Faturamento por Data</h3>
+                <span className="text-xs text-[#8E8E8E]">Evolução real de pedidos registrados no Supabase</span>
               </div>
-              <span className="text-xs text-[#8CF000] font-bold">100% Meta Atingida</span>
+              <span className="text-xs text-[#8CF000] font-bold">Dados em Tempo Real</span>
             </div>
 
             <SalesBarChart data={salesChartData} />
@@ -267,4 +279,3 @@ export default async function AdminDashboardPage() {
     </div>
   );
 }
-
