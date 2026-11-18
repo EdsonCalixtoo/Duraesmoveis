@@ -26,6 +26,13 @@ export const useFavoritesStore = create<FavoritesState>()(
             };
           }
         });
+        if (typeof window !== 'undefined') {
+          fetch('/api/favorites', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ productId }),
+          }).catch(() => {});
+        }
       },
 
       isFavorite: (productId: string) => {

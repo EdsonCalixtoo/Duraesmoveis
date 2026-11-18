@@ -391,6 +391,23 @@ async function populateIncludes(
     }
   }
 
+  if (tableName === 'Favorite') {
+    if (include.product) {
+      const allProducts = await fetchTableRows('Product');
+      const allImages = await fetchTableRows('ProductImage');
+      for (const row of result) {
+        const prod = allProducts.find((p) => p.id === row.productId) || null;
+        if (prod) {
+          prod.images = sortRows(
+            allImages.filter((img) => img.productId === prod.id),
+            { displayOrder: 'asc' }
+          );
+        }
+        row.product = prod;
+      }
+    }
+  }
+
   return result;
 }
 
@@ -584,6 +601,19 @@ export function createSupabaseRestModelDelegate(modelName: string) {
       }
 
       return updated;
+    },
+
+    async updateMany(args: {
+      where?: Record<string, unknown>;
+      data: Record<string, unknown>;
+    }) {
+      const rows = await delegate.findMany({ where: args.where });
+      let count = 0;
+      for (const r of rows) {
+        await delegate.update({ where: { id: r.id }, data: args.data });
+        count++;
+      }
+      return { count };
     },
 
     async upsert(args: {

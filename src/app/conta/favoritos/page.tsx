@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Heart, Trash2, ShoppingBag, ArrowRight } from 'lucide-react';
+import { Heart, Trash2, ShoppingBag } from 'lucide-react';
 import { useFavoritesStore } from '@/store/useFavoritesStore';
 import { useCartStore } from '@/store/useCartStore';
 import { formatCurrency } from '@/lib/utils';
@@ -21,58 +21,51 @@ interface FavProduct {
   stock: number;
 }
 
-// Catálogo demonstrativo para resolver favoritos instantaneamente
-const CATALOG_ITEMS: FavProduct[] = [
-  {
-    id: 'sofa-riviera',
-    name: 'Sofá Externo Riviera',
-    slug: 'sofa-externo-riviera-3-lugares',
-    sku: 'SOF-RIV-003',
-    price: 5391.0,
-    originalPrice: 5990.0,
-    discountPercent: 10,
-    image: '/images/prod-sofa-riviera.jpg',
-    stock: 14,
-  },
-  {
-    id: 'poltrona-trancada',
-    name: 'Poltrona Trançada',
-    slug: 'poltrona-de-fibra-sintetica-premium',
-    sku: 'POL-FIB-001',
-    price: 1499.0,
-    originalPrice: 1799.0,
-    discountPercent: 15,
-    image: '/images/prod-poltrona-fibra.jpg',
-    stock: 20,
-  },
-  {
-    id: 'espreguicadeira-mare',
-    name: 'Espreguiçadeira Maré',
-    slug: 'espreguicadeira-aluminio-com-tela-sling',
-    sku: 'ESP-SLI-001',
-    price: 1490.0,
-    originalPrice: 1990.0,
-    discountPercent: 25,
-    image: '/images/prod-espreguicadeira-sling.jpg',
-    stock: 16,
-  },
-];
-
 export default function CustomerFavoritesPage() {
   const { favoriteIds, toggleFavorite } = useFavoritesStore();
   const { addItem } = useCartStore();
-  const [mounted, setMounted] = useState(false);
+  const [products, setProducts] = useState<FavProduct[]>([]);
+  const [dbFavoriteIds, setDbFavoriteIds] = useState<string[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    setMounted(true);
+    fetch('/api/favorites')
+      .then((r) => r.json())
+      .then((data) => {
+        if (Array.isArray(data?.products)) {
+          setProducts(data.products);
+        }
+        if (Array.isArray(data?.favoritedProductIds)) {
+          setDbFavoriteIds(data.favoritedProductIds);
+        }
+      })
+      .catch(() => {})
+      .finally(() => setLoading(false));
   }, []);
 
-  if (!mounted) return null;
-
-  // Filtrar itens favoritos ou exibir os 3 modelos representativos do card 09
-  const favoritedProducts = CATALOG_ITEMS.filter((item) =>
-    favoriteIds.includes(item.slug) || favoriteIds.includes(item.id) || favoriteIds.length === 0
+  const favoritedProducts = products.filter(
+    (item) =>
+      favoriteIds.includes(item.slug) ||
+      favoriteIds.includes(item.id) ||
+      dbFavoriteIds.includes(item.id)
   );
+
+  const handleRemoveFavorite = async (prod: FavProduct) => {
+    if (favoriteIds.includes(prod.slug)) toggleFavorite(prod.slug);
+    if (favoriteIds.includes(prod.id)) toggleFavorite(prod.id);
+    setDbFavoriteIds((prev) => prev.filter((id) => id !== prod.id));
+
+    try {
+      await fetch('/api/favorites', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ productId: prod.id }),
+      });
+    } catch {
+      // Silencioso
+    }
+    toast.info('Removido dos favoritos');
+  };
 
   return (
     <div className="space-y-6">
@@ -90,7 +83,11 @@ export default function CustomerFavoritesPage() {
         </div>
       </div>
 
-      {favoritedProducts.length === 0 ? (
+      {loading ? (
+        <div className="p-12 text-center text-xs text-[#A3A3A3]">
+          Carregando seus favoritos do Supabase...
+        </div>
+      ) : favoritedProducts.length === 0 ? (
         <div className="p-12 text-center bg-[#141414] rounded-2xl border border-[#2B2B2B]">
           <Heart className="w-12 h-12 text-[#737373] mx-auto mb-3" />
           <h3 className="text-base font-bold text-white mb-1">Nenhum favorito salvo</h3>
@@ -119,10 +116,7 @@ export default function CustomerFavoritesPage() {
                   </span>
                 )}
                 <button
-                  onClick={() => {
-                    toggleFavorite(prod.slug);
-                    toast.info('Removido dos favoritos');
-                  }}
+                  onClick={() => handleRemoveFavorite(prod)}
                   className="absolute top-3 right-3 z-10 w-8 h-8 rounded-full bg-black/60 border border-[#3A3A3A] text-[#8CF000] flex items-center justify-center hover:bg-red-500 hover:text-white transition-colors"
                   title="Remover dos favoritos"
                 >

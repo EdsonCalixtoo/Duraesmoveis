@@ -62,7 +62,18 @@ const itemVariants = {
   },
 };
 
-export default function CategoryGrid() {
+interface CategoryGridItem {
+  name: string;
+  slug: string;
+  imageUrl?: string | null;
+}
+
+export default function CategoryGrid({
+  categories,
+}: {
+  categories?: CategoryGridItem[];
+}) {
+  const list = categories && categories.length > 0 ? categories : CATEGORIES;
   return (
     <section className="pt-3 pb-8 md:py-12 bg-[#080808] border-b border-[#1A1A1A]">
       <div className="max-w-7xl mx-auto px-4">
@@ -74,7 +85,7 @@ export default function CategoryGrid() {
           viewport={{ once: true, margin: '-40px' }}
           className="flex items-center justify-between gap-4 overflow-x-auto pb-4 pt-2 no-scrollbar md:justify-around"
         >
-          {CATEGORIES.map((cat) => (
+          {list.map((cat) => (
             <motion.div
               key={cat.slug}
               variants={itemVariants}
@@ -90,7 +101,7 @@ export default function CategoryGrid() {
                 <div className="relative w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 rounded-2xl bg-[#1C1C1C] border border-[#303030] group-hover:border-[#8CF000] overflow-hidden transition-all duration-300 p-1 group-hover:shadow-[0_0_18px_rgba(140,240,0,0.35)]">
                   <div className="relative w-full h-full rounded-xl overflow-hidden bg-zinc-900">
                     <Image
-                      src={cat.imageUrl}
+                      src={cat.imageUrl || '/images/cat-poltronas.jpg'}
                       alt={cat.name}
                       fill
                       className="object-cover group-hover:scale-110 transition-transform duration-500"

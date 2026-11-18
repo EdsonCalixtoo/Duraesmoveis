@@ -13,17 +13,26 @@ export const dynamic = 'force-dynamic';
 
 export default async function HomePage() {
   let products: unknown[] = [];
+  let categories: { name: string; slug: string; imageUrl?: string | null }[] = [];
   try {
-    products = await prisma.product.findMany({
-      where: { active: true },
-      orderBy: { reviewsCount: 'desc' },
-      include: {
-        images: { orderBy: { displayOrder: 'asc' } },
-        variants: true,
-        category: true,
-      },
-      take: 10,
-    });
+    const [dbProducts, dbCategories] = await Promise.all([
+      prisma.product.findMany({
+        where: { active: true },
+        orderBy: { reviewsCount: 'desc' },
+        include: {
+          images: { orderBy: { displayOrder: 'asc' } },
+          variants: true,
+          category: true,
+        },
+        take: 10,
+      }),
+      prisma.category.findMany({
+        where: { active: true },
+        orderBy: { displayOrder: 'asc' },
+      }),
+    ]);
+    products = dbProducts;
+    categories = dbCategories;
   } catch (error) {
     console.warn('Banco de dados ainda não inicializado ou indisponível na build:', error);
   }
@@ -34,7 +43,7 @@ export default async function HomePage() {
       <HeroSlider />
 
       {/* 02. Categorias Ilustradas */}
-      <CategoryGrid />
+      <CategoryGrid categories={categories} />
 
       {/* 03. Benefícios Comerciais */}
       <CommercialBenefits />

@@ -132,13 +132,25 @@ async function runTests() {
     assert(orderExm?.items.length === 2, `Quantidade de itens: ${orderExm?.items.length} (esperado 2)`);
     assert(orderExm?.payment?.paymentMethod === 'PIX', 'Forma de pagamento confirmada: PIX');
 
-    // 5. Teste de Cupons de Desconto
-    console.log('\nTESTE 5: Sistema de Cupons e Descontos');
+    // 5. Teste de Cupons de Desconto, Banners, Endereços e Configurações
+    console.log('\nTESTE 5: Cupons, Banners, Endereços, Favoritos e Configurações no Supabase');
     const coupon = await prisma.coupon.findUnique({
       where: { code: 'BEMVINDO10' },
     });
     assert(coupon !== null, 'Cupom BEMVINDO10 cadastrado no Supabase');
     assert(coupon?.discountValue === 10, 'Valor do desconto é 10%');
+
+    const storeSettingsCount = await prisma.storeSetting.count();
+    assert(storeSettingsCount >= 9, `Configurações da loja no Supabase: ${storeSettingsCount} (esperado >= 9)`);
+
+    const bannersCount = await prisma.banner.count();
+    assert(bannersCount >= 2, `Banners cadastrados no Supabase: ${bannersCount} (esperado >= 2)`);
+
+    const addressesCount = await prisma.address.count();
+    assert(addressesCount >= 1, `Endereços de clientes no Supabase: ${addressesCount} (esperado >= 1)`);
+
+    const reviewsCount = await prisma.review.count();
+    assert(reviewsCount >= 3, `Avaliações de produtos no Supabase: ${reviewsCount} (esperado >= 3)`);
 
     // 6. Teste de Consistência de Estoque em Transação
     console.log('\nTESTE 6: Transação e Baixa de Estoque no PostgreSQL');

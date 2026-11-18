@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { KeyRound, Shield } from 'lucide-react';
+import { KeyRound } from 'lucide-react';
 import { toast } from 'sonner';
 
 export default function CustomerSecurityPage() {
@@ -10,7 +10,7 @@ export default function CustomerSecurityPage() {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const handleUpdatePassword = (e: React.FormEvent) => {
+  const handleUpdatePassword = async (e: React.FormEvent) => {
     e.preventDefault();
     if (newPassword !== confirmPassword) {
       toast.error('A confirmação da nova senha não confere');
@@ -22,13 +22,26 @@ export default function CustomerSecurityPage() {
     }
 
     setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
+    try {
+      const res = await fetch('/api/account/password', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ currentPassword, newPassword }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        toast.error(data?.error || 'Não foi possível atualizar a senha');
+        return;
+      }
       setCurrentPassword('');
       setNewPassword('');
       setConfirmPassword('');
-      toast.success('Senha alterada com sucesso!');
-    }, 600);
+      toast.success('Senha atualizada no Supabase com sucesso!');
+    } catch {
+      toast.error('Erro de conexão ao atualizar senha');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -87,7 +100,7 @@ export default function CustomerSecurityPage() {
               className="px-6 py-2.5 rounded-xl bg-[#8CF000] hover:bg-[#A3FF12] text-black font-bold text-xs flex items-center gap-2 transition-colors disabled:opacity-50"
             >
               <KeyRound className="w-4 h-4" />
-              <span>{loading ? 'Atualizando...' : 'Atualizar Senha'}</span>
+              <span>{loading ? 'Atualizando no Supabase...' : 'Atualizar Senha'}</span>
             </button>
           </div>
         </form>

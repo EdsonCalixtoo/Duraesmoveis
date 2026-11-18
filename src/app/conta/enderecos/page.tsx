@@ -1,34 +1,25 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { MapPin, Plus, Trash2, CheckCircle2 } from 'lucide-react';
 import { toast } from 'sonner';
 
+interface AddressItem {
+  id: string;
+  street: string;
+  number: string;
+  complement?: string | null;
+  neighborhood: string;
+  city: string;
+  state: string;
+  zipCode: string;
+  isDefault: boolean;
+}
+
 export default function CustomerAddressesPage() {
-  const [addresses, setAddresses] = useState([
-    {
-      id: '1',
-      street: 'Av. Barão de Itapura',
-      number: '1234',
-      complement: 'Apto 42',
-      neighborhood: 'Guanabara',
-      city: 'Campinas',
-      state: 'SP',
-      zipCode: '13020-432',
-      isDefault: true,
-    },
-    {
-      id: '2',
-      street: 'Rua das Palmeiras',
-      number: '550',
-      complement: 'Casa de Praia',
-      neighborhood: 'Maresias',
-      city: 'São Sebastião',
-      state: 'SP',
-      zipCode: '11628-000',
-      isDefault: false,
-    },
-  ]);
+  const [addresses, setAddresses] = useState<AddressItem[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
 
   const [showNewModal, setShowNewModal] = useState(false);
   const [street, setStreet] = useState('');
@@ -39,43 +30,114 @@ export default function CustomerAddressesPage() {
   const [state, setState] = useState('SP');
   const [zipCode, setZipCode] = useState('');
 
-  const handleAddAddress = (e: React.FormEvent) => {
+  const loadAddresses = async () => {
+    setLoading(true);
+    try {
+      const res = await fetch('/api/account/addresses');
+      const data = await res.json();
+      if (Array.isArray(data?.addresses)) {
+        setAddresses(data.addresses);
+      }
+    } catch {
+      // Silencioso
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    loadAddresses();
+  }, []);
+
+  const handleCepLookup = async (rawCep: string) => {
+    setZipCode(rawCep);
+    const digits = rawCep.replace(/\D/g, '');
+    if (digits.length === 8) {
+      try {
+        const res = await fetch(`/api/cep/${digits}`);
+        const data = await res.json();
+        if (res.ok && data) {
+          if (data.street) setStreet(data.street);
+          if (data.neighborhood) setNeighborhood(data.neighborhood);
+          if (data.city) setCity(data.city);
+          if (data.state) setState(data.state);
+        }
+      } catch {
+        // Ignorar se CEP não encontrado
+      }
+    }
+  };
+
+  const handleAddAddress = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!street || !number || !city || !zipCode) {
       toast.error('Preencha os campos obrigatórios');
       return;
     }
 
-    const newAddr = {
-      id: Date.now().toString(),
-      street,
-      number,
-      complement,
-      neighborhood,
-      city,
-      state,
-      zipCode,
-      isDefault: addresses.length === 0,
-    };
-
-    setAddresses([...addresses, newAddr]);
-    setShowNewModal(false);
-    toast.success('Endereço adicionado com sucesso!');
+    setSaving(true);
+    try {
+      const res = await fetch('/api/account/addresses', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          street,
+          number,
+          complement,
+          neighborhood,
+          city,
+          state,
+          zipCode,
+          isDefault: addresses.length === 0,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        toast.error(data?.error || 'Não foi possível salvar o endereço');
+        return;
+      }
+      setShowNewModal(false);
+      setStreet('');
+      setNumber('');
+      setComplement('');
+      setNeighborhood('');
+      setCity('');
+      setZipCode('');
+      toast.success('Endereço salvo no Supabase com sucesso!');
+      await loadAddresses();
+    } catch {
+      toast.error('Erro ao salvar endereço');
+    } finally {
+      setSaving(false);
+    }
   };
 
-  const handleSetDefault = (id: string) => {
-    setAddresses(
-      addresses.map((a) => ({
-        ...a,
-        isDefault: a.id === id,
-      }))
-    );
-    toast.success('Endereço padrão atualizado!');
+  const handleSetDefault = async (id: string) => {
+    try {
+      const res = await fetch('/api/account/addresses', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id }),
+      });
+      if (!res.ok) throw new Error();
+      toast.success('Endereço padrão atualizado no Supabase!');
+      await loadAddresses();
+    } catch {
+      toast.error('Erro ao definir endereço padrão');
+    }
   };
 
-  const handleDelete = (id: string) => {
-    setAddresses(addresses.filter((a) => a.id !== id));
-    toast.info('Endereço removido');
+  const handleDelete = async (id: string) => {
+    try {
+      const res = await fetch(`/api/account/addresses?id=${encodeURIComponent(id)}`, {
+        method: 'DELETE',
+      });
+      if (!res.ok) throw new Error();
+      setAddresses((prev) => prev.filter((a) => a.id !== id));
+      toast.info('Endereço removido do Supabase');
+    } catch {
+      toast.error('Erro ao excluir endereço');
+    }
   };
 
   return (
@@ -97,66 +159,80 @@ export default function CustomerAddressesPage() {
         </button>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {addresses.map((addr) => (
-          <div
-            key={addr.id}
-            className={`p-5 rounded-2xl bg-[#141414] border transition-all space-y-3 ${
-              addr.isDefault
-                ? 'border-[#8CF000]/60 ring-1 ring-[#8CF000]/20'
-                : 'border-[#2B2B2B] hover:border-[#3A3A3A]'
-            }`}
-          >
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <MapPin className="w-4 h-4 text-[#8CF000]" />
-                <span className="text-xs font-bold text-white">
-                  {addr.isDefault ? 'Endereço Principal' : 'Endereço Alternativo'}
-                </span>
+      {loading ? (
+        <div className="p-8 text-center text-xs text-[#A3A3A3]">
+          Carregando endereços do Supabase...
+        </div>
+      ) : addresses.length === 0 ? (
+        <div className="p-10 text-center bg-[#141414] rounded-2xl border border-[#2B2B2B] space-y-3">
+          <MapPin className="w-10 h-10 text-[#737373] mx-auto" />
+          <p className="text-sm font-bold text-white">Nenhum endereço cadastrado</p>
+          <p className="text-xs text-[#A3A3A3]">
+            Adicione um endereço para agilizar seus próximos pedidos.
+          </p>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {addresses.map((addr) => (
+            <div
+              key={addr.id}
+              className={`p-5 rounded-2xl bg-[#141414] border transition-all space-y-3 ${
+                addr.isDefault
+                  ? 'border-[#8CF000]/60 ring-1 ring-[#8CF000]/20'
+                  : 'border-[#2B2B2B] hover:border-[#3A3A3A]'
+              }`}
+            >
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <MapPin className="w-4 h-4 text-[#8CF000]" />
+                  <span className="text-xs font-bold text-white">
+                    {addr.isDefault ? 'Endereço Principal' : 'Endereço Alternativo'}
+                  </span>
+                </div>
+
+                {addr.isDefault && (
+                  <span className="px-2 py-0.5 rounded-full bg-[#8CF000]/10 text-[#8CF000] text-[10px] font-bold">
+                    Padrão
+                  </span>
+                )}
               </div>
 
-              {addr.isDefault && (
-                <span className="px-2 py-0.5 rounded-full bg-[#8CF000]/10 text-[#8CF000] text-[10px] font-bold">
-                  Padrão
-                </span>
-              )}
-            </div>
+              <p className="text-xs text-[#A3A3A3] leading-relaxed">
+                {addr.street}, {addr.number}
+                {addr.complement ? ` - ${addr.complement}` : ''}
+                <br />
+                {addr.neighborhood} - {addr.city}/{addr.state}
+                <br />
+                CEP: {addr.zipCode}
+              </p>
 
-            <p className="text-xs text-[#A3A3A3] leading-relaxed">
-              {addr.street}, {addr.number}
-              {addr.complement ? ` - ${addr.complement}` : ''}
-              <br />
-              {addr.neighborhood} - {addr.city}/{addr.state}
-              <br />
-              CEP: {addr.zipCode}
-            </p>
+              <div className="pt-2 flex items-center justify-between border-t border-[#222222]">
+                {!addr.isDefault ? (
+                  <button
+                    onClick={() => handleSetDefault(addr.id)}
+                    className="text-xs text-[#8CF000] hover:underline font-semibold"
+                  >
+                    Tornar Padrão
+                  </button>
+                ) : (
+                  <span className="text-[11px] text-[#737373] flex items-center gap-1">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-[#8CF000]" />
+                    Utilizado para cálculo
+                  </span>
+                )}
 
-            <div className="pt-2 flex items-center justify-between border-t border-[#222222]">
-              {!addr.isDefault ? (
                 <button
-                  onClick={() => handleSetDefault(addr.id)}
-                  className="text-xs text-[#8CF000] hover:underline font-semibold"
+                  onClick={() => handleDelete(addr.id)}
+                  className="text-[#737373] hover:text-red-400 p-1"
+                  title="Excluir"
                 >
-                  Tornar Padrão
+                  <Trash2 className="w-4 h-4" />
                 </button>
-              ) : (
-                <span className="text-[11px] text-[#737373] flex items-center gap-1">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-[#8CF000]" />
-                  Utilizado para cálculo
-                </span>
-              )}
-
-              <button
-                onClick={() => handleDelete(addr.id)}
-                className="text-[#737373] hover:text-red-400 p-1"
-                title="Excluir"
-              >
-                <Trash2 className="w-4 h-4" />
-              </button>
+              </div>
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
 
       {/* Modal Novo Endereço */}
       {showNewModal && (
@@ -166,9 +242,9 @@ export default function CustomerAddressesPage() {
             <form onSubmit={handleAddAddress} className="space-y-3">
               <input
                 type="text"
-                placeholder="CEP"
+                placeholder="CEP (preenche rua automaticamente)"
                 value={zipCode}
-                onChange={(e) => setZipCode(e.target.value)}
+                onChange={(e) => handleCepLookup(e.target.value)}
                 required
                 className="w-full bg-[#1C1C1C] border border-[#303030] rounded-xl px-3.5 py-2 text-xs text-white"
               />
@@ -235,9 +311,10 @@ export default function CustomerAddressesPage() {
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2 rounded-xl bg-[#8CF000] text-black font-bold text-xs hover:bg-[#A3FF12]"
+                  disabled={saving}
+                  className="px-5 py-2 rounded-xl bg-[#8CF000] text-black font-bold text-xs hover:bg-[#A3FF12] disabled:opacity-50"
                 >
-                  Salvar
+                  {saving ? 'Salvando...' : 'Salvar no Supabase'}
                 </button>
               </div>
             </form>

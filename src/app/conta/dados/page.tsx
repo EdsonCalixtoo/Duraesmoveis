@@ -1,27 +1,53 @@
 'use client';
 
-import React, { useState } from 'react';
-import { useSession } from 'next-auth/react';
-import { User, Save } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
+import { Save } from 'lucide-react';
 import { toast } from 'sonner';
 import { formatCPF, formatPhone } from '@/lib/utils';
 
 export default function CustomerProfilePage() {
-  const { data: session } = useSession();
-
-  const [name, setName] = useState(session?.user?.name || 'Edson Silva');
-  const [email] = useState(session?.user?.email || 'edson@duraesmoveis.com.br');
-  const [phone, setPhone] = useState('(19) 99876-5432');
-  const [cpf, setCpf] = useState('123.456.789-00');
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
+  const [cpf, setCpf] = useState('');
+  const [loading, setLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
 
-  const handleSave = (e: React.FormEvent) => {
+  useEffect(() => {
+    fetch('/api/account/profile')
+      .then((r) => r.json())
+      .then((data) => {
+        if (data?.user) {
+          setName(data.user.name || '');
+          setEmail(data.user.email || '');
+          setPhone(data.user.phone || '');
+          setCpf(data.user.cpf || '');
+        }
+      })
+      .catch(() => {})
+      .finally(() => setLoading(false));
+  }, []);
+
+  const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSaving(true);
-    setTimeout(() => {
+    try {
+      const res = await fetch('/api/account/profile', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, phone, cpf }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        toast.error(data?.error || 'Erro ao atualizar dados');
+        return;
+      }
+      toast.success('Dados pessoais salvos no Supabase com sucesso!');
+    } catch {
+      toast.error('Erro de conexão ao salvar dados');
+    } finally {
       setIsSaving(false);
-      toast.success('Dados pessoais atualizados com sucesso!');
-    }, 600);
+    }
   };
 
   return (
@@ -43,6 +69,8 @@ export default function CustomerProfilePage() {
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
+              disabled={loading}
+              required
               className="w-full bg-[#1C1C1C] border border-[#303030] rounded-xl px-4 py-2.5 text-xs text-white"
             />
           </div>
@@ -67,6 +95,7 @@ export default function CustomerProfilePage() {
                 type="text"
                 value={phone}
                 onChange={(e) => setPhone(formatPhone(e.target.value))}
+                disabled={loading}
                 className="w-full bg-[#1C1C1C] border border-[#303030] rounded-xl px-4 py-2.5 text-xs text-white"
               />
             </div>
@@ -78,6 +107,7 @@ export default function CustomerProfilePage() {
                 value={cpf}
                 maxLength={14}
                 onChange={(e) => setCpf(formatCPF(e.target.value))}
+                disabled={loading}
                 className="w-full bg-[#1C1C1C] border border-[#303030] rounded-xl px-4 py-2.5 text-xs text-white"
               />
             </div>
@@ -86,11 +116,11 @@ export default function CustomerProfilePage() {
           <div className="pt-4">
             <button
               type="submit"
-              disabled={isSaving}
+              disabled={isSaving || loading}
               className="px-6 py-2.5 rounded-xl bg-[#8CF000] hover:bg-[#A3FF12] text-black font-bold text-xs flex items-center gap-2 transition-colors disabled:opacity-50"
             >
               <Save className="w-4 h-4" />
-              <span>{isSaving ? 'Salvando...' : 'Salvar Alterações'}</span>
+              <span>{isSaving ? 'Salvando no Supabase...' : 'Salvar Alterações'}</span>
             </button>
           </div>
         </form>
