@@ -171,7 +171,7 @@ export default function ProductCard({ product, className = '' }: ProductCardProp
               </div>
 
               <motion.a
-                href={`https://wa.me/${process.env.NEXT_PUBLIC_STORE_WHATSAPP || '551940001234'}?text=${encodeURIComponent(
+                href={`https://wa.me/${process.env.NEXT_PUBLIC_STORE_WHATSAPP || '5519988254919'}?text=${encodeURIComponent(
                   `Olá! Gostaria de consultar o preço e opções personalizadas para o móvel: ${product.name} (SKU: ${product.sku}).`
                 )}`}
                 target="_blank"

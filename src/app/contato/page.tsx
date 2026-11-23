@@ -50,7 +50,7 @@ export default function ContactPage() {
             {/* Canais de Comunicação */}
             <div className="space-y-4">
               <a
-                href="https://wa.me/551940001234"
+                href="https://wa.me/5519988254919"
                 target="_blank"
                 rel="noreferrer"
                 className="flex items-center gap-4 p-4 rounded-2xl bg-[#161616] border border-[#2B2B2B] hover:border-[#8CF000] transition-colors group"
@@ -61,7 +61,7 @@ export default function ContactPage() {
                 <div>
                   <span className="text-[11px] text-[#A3A3A3] block">WhatsApp / Central</span>
                   <strong className="text-sm font-bold text-white group-hover:text-[#8CF000]">
-                    (19) 4000-1234
+                    (19) 98825-4919
                   </strong>
                 </div>
               </a>
@@ -78,18 +78,24 @@ export default function ContactPage() {
                 </div>
               </div>
 
-              <div className="flex items-center gap-4 p-4 rounded-2xl bg-[#161616] border border-[#2B2B2B]">
-                <div className="w-12 h-12 rounded-xl bg-[#1C1C1C] flex items-center justify-center text-[#8CF000] flex-shrink-0">
+              <a
+                href="https://maps.google.com/?q=Dur%C3%A3es+M%C3%B3veis+em+Fibra+Sint%C3%A9tica+R.+Bento+de+Arruda+Camargo,+848+-+Jardim+Santana,+Campinas+-+SP,+13088-650"
+                target="_blank"
+                rel="noreferrer"
+                className="flex items-center gap-4 p-4 rounded-2xl bg-[#161616] border border-[#2B2B2B] hover:border-[#8CF000] transition-colors group"
+              >
+                <div className="w-12 h-12 rounded-xl bg-[#1C1C1C] flex items-center justify-center text-[#8CF000] group-hover:scale-105 transition-transform flex-shrink-0">
                   <MapPin className="w-5 h-5" />
                 </div>
                 <div>
-                  <span className="text-[11px] text-[#A3A3A3] block">Showroom e Escritório</span>
-                  <strong className="text-sm font-bold text-white leading-snug block">
-                    Av. Norte-Sul, 1234 - Taquaral<br />
-                    Campinas - SP
+                  <span className="text-[11px] text-[#A3A3A3] block">Showroom e Fábrica</span>
+                  <strong className="text-sm font-bold text-white leading-snug block group-hover:text-[#8CF000]">
+                    R. Bento de Arruda Camargo, 848 - Jardim Santana<br />
+                    Campinas - SP, 13088-650
                   </strong>
+                  <span className="text-[10px] text-[#8CF000] mt-0.5 inline-block">Ver no Google Maps &rarr;</span>
                 </div>
-              </div>
+              </a>
             </div>
           </div>
 
@@ -193,7 +199,7 @@ export default function ContactPage() {
                   </div>
 
                   <a
-                    href={`https://wa.me/551940001234?text=${encodeURIComponent(
+                    href={`https://wa.me/5519988254919?text=${encodeURIComponent(
                       `Olá! Meu nome é ${name || 'Cliente'} e gostaria de falar com a Durães Móveis sobre: ${subject}. ${message}`
                     )}`}
                     target="_blank"

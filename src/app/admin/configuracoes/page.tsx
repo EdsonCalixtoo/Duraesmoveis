@@ -7,10 +7,10 @@ import { toast } from 'sonner';
 
 export default function AdminSettingsPage() {
   const [storeName, setStoreName] = useState('Durães Móveis');
-  const [phone, setPhone] = useState('(19) 4000-1234');
-  const [whatsapp, setWhatsapp] = useState('551940001234');
+  const [phone, setPhone] = useState('(19) 98825-4919');
+  const [whatsapp, setWhatsapp] = useState('5519988254919');
   const [email, setEmail] = useState('contato@duraesmoveis.com.br');
-  const [address, setAddress] = useState('Av. Norte-Sul, 1234 - Taquaral, Campinas - SP');
+  const [address, setAddress] = useState('R. Bento de Arruda Camargo, 848 - Jardim Santana, Campinas - SP, 13088-650');
   const [freeShippingThreshold, setFreeShippingThreshold] = useState('2999');
   const [pixDiscountPercent, setPixDiscountPercent] = useState('5');
   const [maxInstallments, setMaxInstallments] = useState('12');

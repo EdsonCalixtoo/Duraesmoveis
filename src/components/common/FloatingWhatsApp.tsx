@@ -6,7 +6,7 @@ import { MessageSquare, X } from 'lucide-react';
 
 export default function FloatingWhatsApp() {
   const [showTooltip, setShowTooltip] = useState(true);
-  const whatsappNumber = process.env.NEXT_PUBLIC_STORE_WHATSAPP || '551940001234';
+  const whatsappNumber = process.env.NEXT_PUBLIC_STORE_WHATSAPP || '5519988254919';
   const defaultMessage = encodeURIComponent(
     'Olá! Estive navegando no site da Durães Móveis e gostaria de falar com um consultor sobre os móveis para área externa.'
   );

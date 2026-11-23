@@ -106,13 +106,13 @@ export default function Footer() {
             <h4 className="text-white text-xs font-bold uppercase tracking-wider">Atendimento VIP</h4>
             <div className="space-y-2 text-xs">
               <a
-                href="https://wa.me/551940001234"
+                href="https://wa.me/5519988254919"
                 target="_blank"
                 rel="noreferrer"
                 className="flex items-center gap-2 text-white hover:text-[#8CF000] transition-colors"
               >
                 <MessageSquare className="w-4 h-4 text-[#8CF000]" />
-                <span>(19) 4000-1234 (WhatsApp)</span>
+                <span>(19) 98825-4919 (WhatsApp)</span>
               </a>
               <div className="flex items-center gap-2">
                 <Headphones className="w-4 h-4 text-[#8CF000]" />
@@ -123,8 +123,8 @@ export default function Footer() {
                 Sábado: 09h às 15h
               </p>
               <p className="text-[11px] text-[#737373]">
-                Av. Norte-Sul, 1234 - Taquaral<br />
-                Campinas - SP
+                R. Bento de Arruda Camargo, 848 - Jardim Santana<br />
+                Campinas - SP, 13088-650
               </p>
             </div>
           </div>

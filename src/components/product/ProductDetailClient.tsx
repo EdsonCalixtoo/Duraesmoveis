@@ -254,7 +254,7 @@ export default function ProductDetailClient({ product }: { product: ProductItem 
             <div className="space-y-3 pt-2">
               <div className="flex items-center gap-3">
                 <motion.a
-                  href={`https://wa.me/${process.env.NEXT_PUBLIC_STORE_WHATSAPP || '551940001234'}?text=${encodeURIComponent(
+                  href={`https://wa.me/${process.env.NEXT_PUBLIC_STORE_WHATSAPP || '5519988254919'}?text=${encodeURIComponent(
                     `Olá! Gostaria de consultar o orçamento e opções personalizadas para o móvel: ${product.name} (SKU: ${selectedVariant?.sku || product.sku})${selectedVariant ? ` na cor ${selectedVariant.colorName}` : ''}.`
                   )}`}
                   target="_blank"
