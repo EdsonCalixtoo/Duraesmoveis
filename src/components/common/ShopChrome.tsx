@@ -7,6 +7,7 @@ import Footer from './Footer';
 import MobileBottomNav from './MobileBottomNav';
 import PageTransition from './PageTransition';
 import PageProgress from './PageProgress';
+import FloatingWhatsApp from './FloatingWhatsApp';
 
 export default function ShopChrome({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -30,6 +31,7 @@ export default function ShopChrome({ children }: { children: React.ReactNode }) 
       </main>
       <Footer />
       <MobileBottomNav />
+      <FloatingWhatsApp />
     </div>
   );
 }

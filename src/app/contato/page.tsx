@@ -168,7 +168,7 @@ export default function ContactPage() {
                   />
                 </div>
 
-                <div className="pt-2">
+                <div className="pt-2 space-y-3">
                   <button
                     type="submit"
                     disabled={loading}
@@ -183,6 +183,26 @@ export default function ContactPage() {
                       </>
                     )}
                   </button>
+
+                  <div className="relative flex py-1 items-center">
+                    <div className="flex-grow border-t border-[#262626]" />
+                    <span className="flex-shrink mx-3 text-[10px] text-[#737373] uppercase tracking-wider">
+                      ou se preferir
+                    </span>
+                    <div className="flex-grow border-t border-[#262626]" />
+                  </div>
+
+                  <a
+                    href={`https://wa.me/551940001234?text=${encodeURIComponent(
+                      `Olá! Meu nome é ${name || 'Cliente'} e gostaria de falar com a Durães Móveis sobre: ${subject}. ${message}`
+                    )}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-full py-3.5 rounded-xl bg-[#1F1F1F] hover:bg-[#282828] text-white border border-[#333333] hover:border-[#8CF000] text-xs font-bold flex items-center justify-center gap-2 transition-all"
+                  >
+                    <MessageSquare className="w-4 h-4 text-[#8CF000]" />
+                    <span>Iniciar Conversa Imediata no WhatsApp</span>
+                  </a>
                 </div>
               </form>
             )}
