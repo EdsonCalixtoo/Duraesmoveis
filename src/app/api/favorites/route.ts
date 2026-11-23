@@ -8,9 +8,7 @@ export const dynamic = 'force-dynamic';
 async function resolveUserId() {
   const session = await getServerSession(authOptions);
   const sessionUserId = (session?.user as unknown as { id?: string })?.id;
-  if (sessionUserId) return sessionUserId;
-  const defaultCustomer = await prisma.user.findFirst({ where: { role: 'CUSTOMER' } });
-  return defaultCustomer?.id || null;
+  return sessionUserId || null;
 }
 
 export async function GET() {

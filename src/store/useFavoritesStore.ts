@@ -11,7 +11,7 @@ interface FavoritesState {
 export const useFavoritesStore = create<FavoritesState>()(
   persist(
     (set, get) => ({
-      favoriteIds: ['sofa-externo-riviera-3-lugares', 'guarda-sol-lateral-3m'], // pre-populado conforme mockup tela 09
+      favoriteIds: [],
 
       toggleFavorite: (productId: string) => {
         set((state) => {

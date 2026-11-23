@@ -10,14 +10,15 @@ export default async function CustomerOrdersPage() {
   const session = await getServerSession(authOptions);
   const userId = (session?.user as unknown as { id?: string })?.id;
 
-  // Se o usuário estiver autenticado, busca os pedidos dele; caso contrário ou se for o cliente demonstrativo, exibe os pedidos do seed
-  const orders = await prisma.order.findMany({
-    where: userId ? { OR: [{ userId }, { orderNumber: 'EXM-10234' }] } : {},
-    orderBy: { createdAt: 'desc' },
-    include: {
-      items: true,
-    },
-  });
+  const orders = userId
+    ? await prisma.order.findMany({
+        where: { userId },
+        orderBy: { createdAt: 'desc' },
+        include: {
+          items: true,
+        },
+      })
+    : [];
 
   return (
     <div className="space-y-6">

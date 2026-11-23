@@ -7,7 +7,7 @@ import { ArrowRight, ChevronLeft, ChevronRight, ShieldCheck, Sun, Sparkles } fro
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 
 interface HeroSlide {
-  id: number;
+  id: number | string;
   tag: string;
   titlePrefix: string;
   highlight: string;
@@ -20,7 +20,18 @@ interface HeroSlide {
   features: { icon: typeof ShieldCheck; text: string; shortText: string }[];
 }
 
-const SLIDES: HeroSlide[] = [
+export interface DbBannerItem {
+  id: string;
+  title: string;
+  highlightText?: string | null;
+  subtitle?: string | null;
+  buttonText?: string | null;
+  buttonLink?: string | null;
+  imageUrl: string;
+  active: boolean;
+}
+
+const DEFAULT_SLIDES: HeroSlide[] = [
   {
     id: 1,
     tag: 'Coleção Exclusiva Outdoor 2026',
@@ -77,7 +88,41 @@ const SLIDES: HeroSlide[] = [
   },
 ];
 
-export default function HeroSlider() {
+export default function HeroSlider({ dbBanners }: { dbBanners?: DbBannerItem[] }) {
+  const slides: HeroSlide[] = React.useMemo(() => {
+    if (dbBanners && dbBanners.length > 0) {
+      return dbBanners.map((b, idx) => {
+        let titlePrefix = b.title;
+        let highlight = b.highlightText || '';
+        if (!highlight && b.title.includes(' ')) {
+          const words = b.title.split(' ');
+          highlight = words.pop() || '';
+          titlePrefix = words.join(' ');
+        }
+        return {
+          id: b.id,
+          tag: idx === 0 ? 'Coleção Exclusiva Outdoor 2026' : 'Móveis de Luxo Durães',
+          titlePrefix,
+          highlight,
+          subtitle:
+            b.subtitle ||
+            'Móveis externos com design moderno, qualidade premium e conforto incomparável.',
+          buttonText: b.buttonText || 'Ver Coleção Completa',
+          buttonLink: b.buttonLink || '/catalogo',
+          imageUrl: b.imageUrl,
+          objectPositionMobile: 'center 75%',
+          objectPositionDesktop: 'center center',
+          features: [
+            { icon: ShieldCheck, text: '5 Anos de Garantia', shortText: '5 Anos Garantia' },
+            { icon: Sun, text: 'Alumínio Naval Nobre', shortText: 'Alumínio Naval' },
+            { icon: Sparkles, text: 'Tecidos 100% Impermeáveis', shortText: '100% Impermeável' },
+          ],
+        };
+      });
+    }
+    return DEFAULT_SLIDES;
+  }, [dbBanners]);
+
   const [current, setCurrent] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
   const shouldReduceMotion = useReducedMotion();
@@ -87,12 +132,12 @@ export default function HeroSlider() {
   const [touchEndX, setTouchEndX] = useState<number | null>(null);
 
   const nextSlide = useCallback(() => {
-    setCurrent((prev) => (prev + 1) % SLIDES.length);
-  }, []);
+    setCurrent((prev) => (prev + 1) % slides.length);
+  }, [slides.length]);
 
   const prevSlide = useCallback(() => {
-    setCurrent((prev) => (prev === 0 ? SLIDES.length - 1 : prev - 1));
-  }, []);
+    setCurrent((prev) => (prev === 0 ? slides.length - 1 : prev - 1));
+  }, [slides.length]);
 
   // Keyboard navigation for accessibility
   useEffect(() => {
@@ -116,7 +161,7 @@ export default function HeroSlider() {
     return () => clearInterval(timer);
   }, [isPaused, nextSlide]);
 
-  const slide = SLIDES[current];
+  const slide = slides[current] || slides[0];
 
   // Touch handlers for mobile swipe
   const handleTouchStart = (e: React.TouchEvent) => {
@@ -192,7 +237,7 @@ export default function HeroSlider() {
 
           {/* Indicador de Swipe sutil no canto inferior direito */}
           <div className="absolute bottom-2.5 right-3.5 z-10 px-2 py-0.5 rounded-md bg-black/50 border border-white/10 text-[9px] font-mono text-zinc-400 backdrop-blur-sm pointer-events-none">
-            0{current + 1} / 0{SLIDES.length}
+            0{current + 1} / 0{slides.length}
           </div>
         </div>
 
@@ -247,7 +292,7 @@ export default function HeroSlider() {
           <div className="flex items-center justify-center gap-3 pt-1 pb-1">
             <span className="text-[11px] font-mono font-bold text-[#8CF000]">0{current + 1}</span>
             <div className="flex items-center gap-2">
-              {SLIDES.map((s, idx) => (
+              {slides.map((s, idx) => (
                 <button
                   key={s.id}
                   onClick={() => setCurrent(idx)}
@@ -265,7 +310,7 @@ export default function HeroSlider() {
                 </button>
               ))}
             </div>
-            <span className="text-[11px] font-mono text-[#737373]">0{SLIDES.length}</span>
+            <span className="text-[11px] font-mono text-[#737373]">0{slides.length}</span>
           </div>
         </div>
 
@@ -421,7 +466,7 @@ export default function HeroSlider() {
         <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 flex items-center gap-4 bg-black/50 backdrop-blur-md px-4 py-2 rounded-full border border-[#303030]">
           <span className="text-xs font-mono font-bold text-[#8CF000]">0{current + 1}</span>
           <div className="flex items-center gap-2">
-            {SLIDES.map((s, idx) => (
+            {slides.map((s, idx) => (
               <button
                 key={s.id}
                 onClick={() => setCurrent(idx)}
@@ -437,7 +482,7 @@ export default function HeroSlider() {
               </button>
             ))}
           </div>
-          <span className="text-xs font-mono text-[#A3A3A3]">0{SLIDES.length}</span>
+          <span className="text-xs font-mono text-[#A3A3A3]">0{slides.length}</span>
         </div>
       </div>
     </section>

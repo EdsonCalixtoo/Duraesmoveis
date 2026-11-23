@@ -10,7 +10,7 @@ import Logo from './Logo';
 import { useCartStore } from '@/store/useCartStore';
 import { useFavoritesStore } from '@/store/useFavoritesStore';
 
-const CATEGORIES = [
+const DEFAULT_CATEGORIES = [
   { name: 'Sofás Externos', slug: 'sofas-externos' },
   { name: 'Poltronas', slug: 'poltronas' },
   { name: 'Mesas e Cadeiras', slug: 'mesas-e-cadeiras' },
@@ -25,9 +25,26 @@ export default function Header() {
   const { openCart, getTotalItemsCount } = useCartStore();
   const { favoriteIds } = useFavoritesStore();
 
+  const [categories, setCategories] = useState(DEFAULT_CATEGORIES);
   const [searchQuery, setSearchQuery] = useState('');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [categoriesDropdownOpen, setCategoriesDropdownOpen] = useState(false);
+
+  React.useEffect(() => {
+    fetch('/api/admin/categories')
+      .then((r) => r.json())
+      .then((data) => {
+        if (Array.isArray(data?.categories) && data.categories.length > 0) {
+          setCategories(
+            data.categories.map((c: { name: string; slug: string }) => ({
+              name: c.name,
+              slug: c.slug,
+            }))
+          );
+        }
+      })
+      .catch(() => {});
+  }, []);
 
   const cartCount = getTotalItemsCount();
   const favCount = favoriteIds.length;
@@ -81,7 +98,7 @@ export default function Header() {
                     Ver Todo o Catálogo &rarr;
                   </Link>
                   <div className="h-px bg-[#252525] my-1" />
-                  {CATEGORIES.map((cat) => (
+                  {categories.map((cat) => (
                     <Link
                       key={cat.slug}
                       href={`/categoria/${cat.slug}`}
@@ -243,7 +260,7 @@ export default function Header() {
                   Todos os Produtos
                 </Link>
                 <div className="pl-3 border-l-2 border-[#303030] space-y-1.5 py-1">
-                  {CATEGORIES.map((cat) => (
+                  {categories.map((cat) => (
                     <Link
                       key={cat.slug}
                       href={`/categoria/${cat.slug}`}

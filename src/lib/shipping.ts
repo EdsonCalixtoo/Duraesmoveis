@@ -27,23 +27,7 @@ export async function lookupCEP(cep: string): Promise<{
       zipCode: clean,
     };
   } catch {
-    // Fallback if offline
-    if (clean.startsWith('13')) {
-      return {
-        street: 'Av. Barão de Itapura',
-        neighborhood: 'Guanabara',
-        city: 'Campinas',
-        state: 'SP',
-        zipCode: clean,
-      };
-    }
-    return {
-      street: 'Av. Paulista',
-      neighborhood: 'Bela Vista',
-      city: 'São Paulo',
-      state: 'SP',
-      zipCode: clean,
-    };
+    return null;
   }
 }
 

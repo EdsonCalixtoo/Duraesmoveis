@@ -44,13 +44,13 @@ export default function CheckoutPage() {
   const [cpf, setCpf] = useState('');
 
   // Etapa 2: Entrega
-  const [zipCode, setZipCode] = useState('13090-000');
-  const [street, setStreet] = useState('Avenida Barão de Itapura');
-  const [number, setNumber] = useState('1234');
-  const [complement, setComplement] = useState('Apto 42');
-  const [neighborhood, setNeighborhood] = useState('Guanabara');
-  const [city, setCity] = useState('Campinas');
-  const [state, setState] = useState('SP');
+  const [zipCode, setZipCode] = useState('');
+  const [street, setStreet] = useState('');
+  const [number, setNumber] = useState('');
+  const [complement, setComplement] = useState('');
+  const [neighborhood, setNeighborhood] = useState('');
+  const [city, setCity] = useState('');
+  const [state, setState] = useState('');
   const [shippingOptionId, setShippingOptionId] = useState('transportadora_especializada');
   const [isSearchingCep, setIsSearchingCep] = useState(false);
 
@@ -70,7 +70,7 @@ export default function CheckoutPage() {
     orderNumber: string;
   } | null>(null);
 
-  // Pré-preenchimento caso logado
+  // Pré-preenchimento caso logado a partir do Supabase
   useEffect(() => {
     if (session?.user) {
       if (session.user.name && !name) setName(session.user.name);
@@ -78,6 +78,26 @@ export default function CheckoutPage() {
       const userExtended = session.user as unknown as { phone?: string; cpf?: string };
       if (userExtended.phone && !phone) setPhone(formatPhone(userExtended.phone));
       if (userExtended.cpf && !cpf) setCpf(formatCPF(userExtended.cpf));
+
+      fetch('/api/account/addresses')
+        .then((r) => r.json())
+        .then((data) => {
+          if (Array.isArray(data?.addresses) && data.addresses.length > 0) {
+            const def =
+              data.addresses.find((a: { isDefault?: boolean }) => a.isDefault) ||
+              data.addresses[0];
+            if (def) {
+              if (def.zipCode) setZipCode(formatCEP(def.zipCode));
+              if (def.street) setStreet(def.street);
+              if (def.number) setNumber(def.number);
+              if (def.complement) setComplement(def.complement);
+              if (def.neighborhood) setNeighborhood(def.neighborhood);
+              if (def.city) setCity(def.city);
+              if (def.state) setState(def.state);
+            }
+          }
+        })
+        .catch(() => {});
     }
   }, [session]);
 

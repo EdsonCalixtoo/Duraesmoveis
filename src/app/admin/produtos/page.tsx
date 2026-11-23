@@ -86,11 +86,19 @@ export default async function AdminProductsPage({
                   return (
                     <tr key={p.id} className="hover:bg-[#191919] transition-colors">
                       <td className="py-3 px-4 flex items-center gap-3">
-                        <div className="relative w-11 h-11 rounded-lg overflow-hidden bg-[#0A0A0A] border border-[#2E2E2E] flex-shrink-0">
+                        <Link
+                          href={`/admin/produtos/${p.id}/editar`}
+                          className="relative w-11 h-11 rounded-lg overflow-hidden bg-[#0A0A0A] border border-[#2E2E2E] flex-shrink-0 hover:border-[#8CF000] transition-colors"
+                        >
                           <Image src={coverImg} alt={p.name} fill className="object-cover" sizes="44px" />
-                        </div>
+                        </Link>
                         <div>
-                          <span className="font-bold text-white block truncate max-w-xs">{p.name}</span>
+                          <Link
+                            href={`/admin/produtos/${p.id}/editar`}
+                            className="font-bold text-white block truncate max-w-xs hover:text-[#8CF000] transition-colors"
+                          >
+                            {p.name}
+                          </Link>
                           <span className="text-[10px] text-[#737373]">/{p.slug}</span>
                         </div>
                       </td>

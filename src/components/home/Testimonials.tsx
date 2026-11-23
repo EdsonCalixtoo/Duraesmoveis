@@ -5,9 +5,17 @@ import Image from 'next/image';
 import { Star } from 'lucide-react';
 import { motion } from 'framer-motion';
 
-const REVIEWS = [
+export interface DbReviewItem {
+  id: string;
+  userName: string;
+  rating: number;
+  comment: string;
+  title?: string | null;
+}
+
+const DEFAULT_REVIEWS = [
   {
-    id: 1,
+    id: '1',
     name: 'Carolina Mendonça',
     location: 'São Paulo - SP',
     comment: 'Adquiri o conjunto de sofá Riviera para o terraço da nossa cobertura. A elegância é incomparável e a corda náutica suportou tempestades sem qualquer sinal de desgaste.',
@@ -16,7 +24,7 @@ const REVIEWS = [
     avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=150&q=80',
   },
   {
-    id: 2,
+    id: '2',
     name: 'Rodrigo Siqueira',
     location: 'Campinas - SP',
     comment: 'O atendimento da equipe Durães Móveis superou todas as expectativas. A entrega própria veio agendada no horário certo e o sofá já veio montado e posicionado no jardim.',
@@ -25,7 +33,7 @@ const REVIEWS = [
     avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=150&q=80',
   },
   {
-    id: 3,
+    id: '3',
     name: 'Beatriz Fonseca',
     location: 'Rio de Janeiro - RJ',
     comment: 'Moro de frente para o mar e sofria com móveis de ferro oxidando. Os móveis em alumínio naval da Durães Móveis continuam brilhando como no primeiro dia. Recomendo muito!',
@@ -57,7 +65,26 @@ const itemVariants = {
   },
 };
 
-export default function Testimonials() {
+export default function Testimonials({ dbReviews }: { dbReviews?: DbReviewItem[] }) {
+  const reviews = React.useMemo(() => {
+    if (dbReviews && dbReviews.length > 0) {
+      return dbReviews.map((r, i) => ({
+        id: r.id,
+        name: r.userName,
+        location: r.title || 'Cliente Verificado',
+        comment: r.comment,
+        rating: r.rating || 5,
+        avatar: `https://images.unsplash.com/photo-${
+          i === 0
+            ? '1544005313-94ddf0286df2'
+            : i === 1
+            ? '1507003211169-0a1dd7228f2d'
+            : '1534528741775-53994a69daeb'
+        }?auto=format&fit=crop&w=150&q=80`,
+      }));
+    }
+    return DEFAULT_REVIEWS;
+  }, [dbReviews]);
   return (
     <section className="py-16 bg-[#080808] border-t border-[#1C1C1C]">
       <div className="max-w-7xl mx-auto px-4">
@@ -86,7 +113,7 @@ export default function Testimonials() {
           viewport={{ once: true, margin: '-40px' }}
           className="grid grid-cols-1 md:grid-cols-3 gap-6"
         >
-          {REVIEWS.map((rev) => (
+          {reviews.map((rev) => (
             <motion.div
               key={rev.id}
               variants={itemVariants}
