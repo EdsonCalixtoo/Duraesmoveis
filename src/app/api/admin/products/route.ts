@@ -34,7 +34,7 @@ export async function POST(req: Request) {
       variants,
     } = body;
 
-    if (!name || !categoryId || !price || !sku) {
+    if (!name || !categoryId || price === undefined || price === null || price === '' || !sku) {
       return NextResponse.json({ error: 'Campos obrigatórios ausentes' }, { status: 400 });
     }
 
@@ -120,7 +120,7 @@ export async function PUT(req: Request) {
       variants,
     } = body;
 
-    if (!id || !name || !categoryId || price === undefined || !sku) {
+    if (!id || !name || !categoryId || price === undefined || price === null || price === '' || !sku) {
       return NextResponse.json({ error: 'Campos obrigatórios ausentes' }, { status: 400 });
     }
 

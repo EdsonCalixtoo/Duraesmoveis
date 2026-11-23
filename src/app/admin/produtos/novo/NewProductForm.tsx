@@ -15,6 +15,7 @@ export default function NewProductForm({ categories }: { categories: CategoryIte
   const [name, setName] = useState('');
   const [categoryId, setCategoryId] = useState(categories[0]?.id || '');
   const [sku, setSku] = useState('');
+  const [priceOnConsultation, setPriceOnConsultation] = useState(false);
   const [price, setPrice] = useState('');
   const [originalPrice, setOriginalPrice] = useState('');
   const [discountPercent, setDiscountPercent] = useState('0');
@@ -46,7 +47,7 @@ export default function NewProductForm({ categories }: { categories: CategoryIte
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name || !sku || !price || !categoryId) {
+    if (!name || !sku || (!priceOnConsultation && !price) || !categoryId) {
       toast.error('Preencha os campos obrigatórios');
       return;
     }
@@ -60,9 +61,9 @@ export default function NewProductForm({ categories }: { categories: CategoryIte
           name,
           categoryId,
           sku,
-          price: parseFloat(price),
-          originalPrice: originalPrice ? parseFloat(originalPrice) : null,
-          discountPercent: parseInt(discountPercent, 10),
+          price: priceOnConsultation ? 0 : parseFloat(price || '0'),
+          originalPrice: originalPrice && !priceOnConsultation ? parseFloat(originalPrice) : null,
+          discountPercent: priceOnConsultation ? 0 : parseInt(discountPercent || '0', 10),
           stock: parseInt(stock, 10),
           shortDescription,
           description,
@@ -157,16 +158,49 @@ export default function NewProductForm({ categories }: { categories: CategoryIte
             />
           </div>
 
+          {/* Opção Preço Sob Consulta */}
+          <div className="sm:col-span-2 p-3.5 rounded-xl bg-[#1C1C1C] border border-[#2E2E2E] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div>
+              <span className="text-xs font-bold text-white block">Preço Sob Consulta (Orçamento no WhatsApp)</span>
+              <span className="text-[11px] text-[#737373]">
+                Marque se o produto tiver variações personalizadas e você preferir negociar diretamente pelo WhatsApp.
+              </span>
+            </div>
+            <label className="flex items-center gap-2 cursor-pointer flex-shrink-0">
+              <input
+                type="checkbox"
+                checked={priceOnConsultation}
+                onChange={(e) => {
+                  setPriceOnConsultation(e.target.checked);
+                  if (e.target.checked) {
+                    setPrice('0');
+                    setOriginalPrice('');
+                    setDiscountPercent('0');
+                  } else if (price === '0') {
+                    setPrice('');
+                  }
+                }}
+                className="w-4 h-4 accent-[#8CF000] rounded"
+              />
+              <span className="text-xs font-bold text-[#8CF000]">Sob Consulta</span>
+            </label>
+          </div>
+
           <div className="space-y-1.5">
-            <label className="text-xs font-semibold text-[#A3A3A3]">Preço de Venda (R$) *</label>
+            <label className="text-xs font-semibold text-[#A3A3A3]">
+              Preço de Venda (R$) {priceOnConsultation ? '(Sob Consulta)' : '*'}
+            </label>
             <input
               type="number"
               step="0.01"
-              placeholder="5391.00"
-              value={price}
+              placeholder={priceOnConsultation ? '0.00 (Sob Consulta)' : '5391.00'}
+              value={priceOnConsultation ? '0' : price}
               onChange={(e) => setPrice(e.target.value)}
-              required
-              className="w-full bg-[#1C1C1C] border border-[#303030] rounded-xl px-4 py-2.5 text-xs text-white font-mono"
+              disabled={priceOnConsultation}
+              required={!priceOnConsultation}
+              className={`w-full bg-[#1C1C1C] border rounded-xl px-4 py-2.5 text-xs text-white font-mono ${
+                priceOnConsultation ? 'border-[#262626] opacity-50 cursor-not-allowed' : 'border-[#303030]'
+              }`}
             />
           </div>
 
@@ -176,9 +210,12 @@ export default function NewProductForm({ categories }: { categories: CategoryIte
               type="number"
               step="0.01"
               placeholder="5990.00"
-              value={originalPrice}
+              value={priceOnConsultation ? '' : originalPrice}
               onChange={(e) => setOriginalPrice(e.target.value)}
-              className="w-full bg-[#1C1C1C] border border-[#303030] rounded-xl px-4 py-2.5 text-xs text-white font-mono"
+              disabled={priceOnConsultation}
+              className={`w-full bg-[#1C1C1C] border rounded-xl px-4 py-2.5 text-xs text-white font-mono ${
+                priceOnConsultation ? 'border-[#262626] opacity-50 cursor-not-allowed' : 'border-[#303030]'
+              }`}
             />
           </div>
 
@@ -188,9 +225,12 @@ export default function NewProductForm({ categories }: { categories: CategoryIte
               type="number"
               min="0"
               max="100"
-              value={discountPercent}
+              value={priceOnConsultation ? '0' : discountPercent}
               onChange={(e) => setDiscountPercent(e.target.value)}
-              className="w-full bg-[#1C1C1C] border border-[#303030] rounded-xl px-4 py-2.5 text-xs text-white font-mono"
+              disabled={priceOnConsultation}
+              className={`w-full bg-[#1C1C1C] border rounded-xl px-4 py-2.5 text-xs text-white font-mono ${
+                priceOnConsultation ? 'border-[#262626] opacity-50 cursor-not-allowed' : 'border-[#303030]'
+              }`}
             />
           </div>
 

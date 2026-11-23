@@ -3,7 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Heart, ShoppingBag, Star } from 'lucide-react';
+import { Heart, ShoppingBag, Star, MessageSquare } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { ProductItem } from '@/types';
 import { formatCurrency } from '@/lib/utils';
@@ -134,28 +134,59 @@ export default function ProductCard({ product, className = '' }: ProductCardProp
         </div>
 
         {/* Price & Action Row */}
-        <div className="flex items-end justify-between pt-2 border-t border-[#262626]">
-          <div className="flex flex-col">
-            {product.originalPrice && product.originalPrice > product.price && (
-              <span className="text-[11px] text-[#737373] line-through">
-                {formatCurrency(product.originalPrice)}
-              </span>
-            )}
-            <span className="text-base font-bold text-white tracking-tight">
-              {formatCurrency(product.price)}
-            </span>
-          </div>
+        <div className="flex items-center justify-between pt-2 border-t border-[#262626]">
+          {product.price > 0 ? (
+            <>
+              <div className="flex flex-col">
+                {product.originalPrice && product.originalPrice > product.price && (
+                  <span className="text-[11px] text-[#737373] line-through">
+                    {formatCurrency(product.originalPrice)}
+                  </span>
+                )}
+                <span className="text-base font-bold text-white tracking-tight">
+                  {formatCurrency(product.price)}
+                </span>
+              </div>
 
-          {/* Quick Add to Cart Button */}
-          <motion.button
-            whileHover={{ scale: 1.1, backgroundColor: '#A3FF12' }}
-            whileTap={{ scale: 0.9 }}
-            onClick={handleAddToCart}
-            aria-label={`Comprar ${product.name}`}
-            className="w-10 h-10 rounded-xl bg-[#8CF000] text-black flex items-center justify-center transition-shadow shadow-[0_0_12px_rgba(140,240,0,0.3)] hover:shadow-[0_0_18px_rgba(140,240,0,0.6)]"
-          >
-            <ShoppingBag className="w-4 h-4 stroke-[2.5]" />
-          </motion.button>
+              {/* Quick Add to Cart Button */}
+              <motion.button
+                whileHover={{ scale: 1.1, backgroundColor: '#A3FF12' }}
+                whileTap={{ scale: 0.9 }}
+                onClick={handleAddToCart}
+                aria-label={`Comprar ${product.name}`}
+                className="w-10 h-10 rounded-xl bg-[#8CF000] text-black flex items-center justify-center transition-shadow shadow-[0_0_12px_rgba(140,240,0,0.3)] hover:shadow-[0_0_18px_rgba(140,240,0,0.6)]"
+              >
+                <ShoppingBag className="w-4 h-4 stroke-[2.5]" />
+              </motion.button>
+            </>
+          ) : (
+            <>
+              <div className="flex flex-col">
+                <span className="text-[10px] text-[#A3A3A3] uppercase tracking-wider font-semibold">
+                  Preço
+                </span>
+                <span className="text-xs font-bold text-[#8CF000]">
+                  Sob Consulta
+                </span>
+              </div>
+
+              <motion.a
+                href={`https://wa.me/${process.env.NEXT_PUBLIC_STORE_WHATSAPP || '551940001234'}?text=${encodeURIComponent(
+                  `Olá! Gostaria de consultar o preço e opções personalizadas para o móvel: ${product.name} (SKU: ${product.sku}).`
+                )}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={(e) => e.stopPropagation()}
+                whileHover={{ scale: 1.05, backgroundColor: '#A3FF12' }}
+                whileTap={{ scale: 0.95 }}
+                className="px-3 py-2 rounded-xl bg-[#8CF000] text-black font-extrabold text-[11px] flex items-center gap-1.5 shadow-[0_0_10px_rgba(140,240,0,0.25)]"
+                title="Consultar no WhatsApp"
+              >
+                <MessageSquare className="w-3.5 h-3.5 fill-current" />
+                <span>Consultar</span>
+              </motion.a>
+            </>
+          )}
         </div>
       </div>
     </motion.div>

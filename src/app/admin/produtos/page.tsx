@@ -113,7 +113,15 @@ export default async function AdminProductsPage({
                           {p.stock} un
                         </span>
                       </td>
-                      <td className="py-3 px-4 font-bold text-white">{formatCurrency(p.price)}</td>
+                      <td className="py-3 px-4 font-bold text-white">
+                        {p.price > 0 ? (
+                          formatCurrency(p.price)
+                        ) : (
+                          <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#8CF000]/10 text-[#8CF000] border border-[#8CF000]/30 whitespace-nowrap">
+                            Sob Consulta
+                          </span>
+                        )}
+                      </td>
                       <td className="py-3 px-4">
                         <span
                           className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${

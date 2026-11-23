@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Heart, ShoppingBag, Zap, Star, ShieldCheck, Check } from 'lucide-react';
+import { Heart, ShoppingBag, Zap, Star, ShieldCheck, Check, MessageSquare } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { ProductItem, ProductVariantItem } from '@/types';
 import { formatCurrency } from '@/lib/utils';
@@ -103,33 +103,48 @@ export default function ProductDetailClient({ product }: { product: ProductItem 
           </div>
 
           {/* Price Box */}
-          <div className="p-4 rounded-2xl bg-[#141414] border border-[#2B2B2B] space-y-1">
-            {product.originalPrice && (
-              <div className="flex items-center gap-2">
-                <span className="text-xs text-[#737373] line-through">
-                  De {formatCurrency(product.originalPrice)}
-                </span>
-                {product.discountPercent > 0 && (
-                  <span className="px-2 py-0.5 rounded bg-[#8CF000]/10 border border-[#8CF000]/30 text-[#8CF000] text-[11px] font-bold">
-                    -{product.discountPercent}%
+          {product.price > 0 ? (
+            <div className="p-4 rounded-2xl bg-[#141414] border border-[#2B2B2B] space-y-1">
+              {product.originalPrice && (
+                <div className="flex items-center gap-2">
+                  <span className="text-xs text-[#737373] line-through">
+                    De {formatCurrency(product.originalPrice)}
                   </span>
-                )}
+                  {product.discountPercent > 0 && (
+                    <span className="px-2 py-0.5 rounded bg-[#8CF000]/10 border border-[#8CF000]/30 text-[#8CF000] text-[11px] font-bold">
+                      -{product.discountPercent}%
+                    </span>
+                  )}
+                </div>
+              )}
+
+              <div className="flex items-baseline gap-2">
+                <span className="text-3xl font-black text-white tracking-tight">
+                  {formatCurrency(currentPrice)}
+                </span>
               </div>
-            )}
 
-            <div className="flex items-baseline gap-2">
-              <span className="text-3xl font-black text-white tracking-tight">
-                {formatCurrency(currentPrice)}
-              </span>
+              <p className="text-xs text-[#A3A3A3]">
+                em até <strong className="text-white">12x de {formatCurrency(installmentValue)}</strong> sem juros
+              </p>
+              <p className="text-xs text-[#8CF000]">
+                ou <strong>{formatCurrency(pixPrice)}</strong> à vista no Pix (5% OFF)
+              </p>
             </div>
-
-            <p className="text-xs text-[#A3A3A3]">
-              em até <strong className="text-white">12x de {formatCurrency(installmentValue)}</strong> sem juros
-            </p>
-            <p className="text-xs text-[#8CF000]">
-              ou <strong>{formatCurrency(pixPrice)}</strong> à vista no Pix (5% OFF)
-            </p>
-          </div>
+          ) : (
+            <div className="p-5 rounded-2xl bg-[#141414] border border-[#8CF000]/30 space-y-2 shadow-[0_0_20px_rgba(140,240,0,0.08)]">
+              <div className="flex items-center gap-2">
+                <div className="w-2 h-2 rounded-full bg-[#8CF000] animate-pulse" />
+                <span className="text-xs uppercase font-extrabold tracking-wider text-[#8CF000]">
+                  Móvel Sob Medida / Projeto Exclusivo
+                </span>
+              </div>
+              <h3 className="text-2xl sm:text-3xl font-black text-white">Preço Sob Consulta</h3>
+              <p className="text-xs text-[#A3A3A3] leading-relaxed">
+                Este modelo conta com diversas opções de medidas, tramas em corda náutica e acabamentos personalizados. Nossos consultores fornecem o orçamento detalhado com envio de catálogo de cores e simulação de frete.
+              </p>
+            </div>
+          )}
 
           {/* Short Description */}
           <p className="text-xs sm:text-sm text-[#A3A3A3] leading-relaxed">
@@ -172,71 +187,109 @@ export default function ProductDetailClient({ product }: { product: ProductItem 
           )}
 
           {/* Quantity Selector & CTAs */}
-          <div className="space-y-3 pt-2">
-            <div className="flex items-center gap-3">
-              {/* Quantity */}
-              <div className="flex items-center bg-[#181818] border border-[#333333] rounded-xl px-2">
+          {product.price > 0 ? (
+            <div className="space-y-3 pt-2">
+              <div className="flex items-center gap-3">
+                {/* Quantity */}
+                <div className="flex items-center bg-[#181818] border border-[#333333] rounded-xl px-2">
+                  <motion.button
+                    whileTap={{ scale: 0.85 }}
+                    onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                    className="px-3 py-3 text-white hover:text-[#8CF000] font-bold text-sm"
+                  >
+                    -
+                  </motion.button>
+                  <span className="px-3 text-sm font-bold text-white">{quantity}</span>
+                  <motion.button
+                    whileTap={{ scale: 0.85 }}
+                    onClick={() => setQuantity(Math.min(selectedVariant?.stock || 10, quantity + 1))}
+                    className="px-3 py-3 text-white hover:text-[#8CF000] font-bold text-sm"
+                  >
+                    +
+                  </motion.button>
+                </div>
+
+                {/* Add to Cart */}
                 <motion.button
-                  whileTap={{ scale: 0.85 }}
-                  onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                  className="px-3 py-3 text-white hover:text-[#8CF000] font-bold text-sm"
+                  whileHover={{ scale: 1.02, backgroundColor: '#A3FF12' }}
+                  whileTap={{ scale: 0.97 }}
+                  onClick={handleAddToCart}
+                  className="flex-1 py-3.5 px-4 rounded-xl bg-[#8CF000] text-black font-extrabold text-sm flex items-center justify-center gap-2 transition-colors shadow-[0_0_15px_rgba(140,240,0,0.3)] hover:shadow-[0_0_22px_rgba(140,240,0,0.6)]"
                 >
-                  -
+                  <ShoppingBag className="w-4 h-4" />
+                  <span>Adicionar ao Carrinho</span>
                 </motion.button>
-                <span className="px-3 text-sm font-bold text-white">{quantity}</span>
+
+                {/* Favorite Button */}
                 <motion.button
-                  whileTap={{ scale: 0.85 }}
-                  onClick={() => setQuantity(Math.min(selectedVariant?.stock || 10, quantity + 1))}
-                  className="px-3 py-3 text-white hover:text-[#8CF000] font-bold text-sm"
+                  whileHover={{ scale: 1.08 }}
+                  whileTap={{ scale: 0.88 }}
+                  onClick={() => {
+                    toggleFavorite(product.slug);
+                    if (!favorited) toast.success('Salvo em seus favoritos!');
+                  }}
+                  className={`w-12 h-12 rounded-xl border flex items-center justify-center transition-colors ${
+                    favorited
+                      ? 'bg-[#1C1C1C] border-[#8CF000] text-[#8CF000] shadow-[0_0_12px_rgba(140,240,0,0.3)]'
+                      : 'bg-[#181818] border-[#333333] text-white hover:border-[#8CF000]'
+                  }`}
+                  title="Favoritar"
                 >
-                  +
+                  <Heart className={`w-5 h-5 ${favorited ? 'fill-[#8CF000]' : ''}`} />
                 </motion.button>
               </div>
 
-              {/* Add to Cart */}
+              {/* Buy Now CTA */}
               <motion.button
-                whileHover={{ scale: 1.02, backgroundColor: '#A3FF12' }}
-                whileTap={{ scale: 0.97 }}
-                onClick={handleAddToCart}
-                className="flex-1 py-3.5 px-4 rounded-xl bg-[#8CF000] text-black font-extrabold text-sm flex items-center justify-center gap-2 transition-colors shadow-[0_0_15px_rgba(140,240,0,0.3)] hover:shadow-[0_0_22px_rgba(140,240,0,0.6)]"
+                whileHover={{ scale: 1.01, borderColor: '#8CF000' }}
+                whileTap={{ scale: 0.98 }}
+                onClick={handleBuyNow}
+                className="w-full py-3.5 px-4 rounded-xl bg-[#1C1C1C] hover:bg-[#252525] border border-[#3A3A3A] text-white font-bold text-sm flex items-center justify-center gap-2 transition-colors shadow-sm"
               >
-                <ShoppingBag className="w-4 h-4" />
-                <span>Adicionar ao Carrinho</span>
-              </motion.button>
-
-              {/* Favorite Button */}
-              <motion.button
-                whileHover={{ scale: 1.08 }}
-                whileTap={{ scale: 0.88 }}
-                onClick={() => {
-                  toggleFavorite(product.slug);
-                  if (!favorited) toast.success('Salvo em seus favoritos!');
-                }}
-                className={`w-12 h-12 rounded-xl border flex items-center justify-center transition-colors ${
-                  favorited
-                    ? 'bg-[#1C1C1C] border-[#8CF000] text-[#8CF000] shadow-[0_0_12px_rgba(140,240,0,0.3)]'
-                    : 'bg-[#181818] border-[#333333] text-white hover:border-[#8CF000]'
-                }`}
-                title="Favoritar"
-              >
-                <Heart className={`w-5 h-5 ${favorited ? 'fill-[#8CF000]' : ''}`} />
+                <Zap className="w-4 h-4 text-[#8CF000]" />
+                <span>Comprar Agora</span>
               </motion.button>
             </div>
+          ) : (
+            <div className="space-y-3 pt-2">
+              <div className="flex items-center gap-3">
+                <motion.a
+                  href={`https://wa.me/${process.env.NEXT_PUBLIC_STORE_WHATSAPP || '551940001234'}?text=${encodeURIComponent(
+                    `Olá! Gostaria de consultar o orçamento e opções personalizadas para o móvel: ${product.name} (SKU: ${selectedVariant?.sku || product.sku})${selectedVariant ? ` na cor ${selectedVariant.colorName}` : ''}.`
+                  )}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  whileHover={{ scale: 1.02, backgroundColor: '#A3FF12' }}
+                  whileTap={{ scale: 0.97 }}
+                  className="flex-1 py-4 px-6 rounded-xl bg-[#8CF000] text-black font-extrabold text-sm flex items-center justify-center gap-2.5 transition-colors shadow-[0_0_20px_rgba(140,240,0,0.35)] hover:shadow-[0_0_28px_rgba(140,240,0,0.6)]"
+                >
+                  <MessageSquare className="w-5 h-5 fill-current" />
+                  <span>Consultar Orçamento no WhatsApp</span>
+                </motion.a>
 
-            {/* Buy Now CTA */}
-            <motion.button
-              whileHover={{ scale: 1.01, borderColor: '#8CF000' }}
-              whileTap={{ scale: 0.98 }}
-              onClick={handleBuyNow}
-              className="w-full py-3.5 px-4 rounded-xl bg-[#1C1C1C] hover:bg-[#252525] border border-[#3A3A3A] text-white font-bold text-sm flex items-center justify-center gap-2 transition-colors shadow-sm"
-            >
-              <Zap className="w-4 h-4 text-[#8CF000]" />
-              <span>Comprar Agora</span>
-            </motion.button>
-          </div>
+                {/* Favorite Button */}
+                <motion.button
+                  whileHover={{ scale: 1.08 }}
+                  whileTap={{ scale: 0.88 }}
+                  onClick={() => {
+                    toggleFavorite(product.slug);
+                    if (!favorited) toast.success('Salvo em seus favoritos!');
+                  }}
+                  className={`w-14 h-14 rounded-xl border flex items-center justify-center transition-colors flex-shrink-0 ${
+                    favorited
+                      ? 'bg-[#1C1C1C] border-[#8CF000] text-[#8CF000] shadow-[0_0_12px_rgba(140,240,0,0.3)]'
+                      : 'bg-[#181818] border-[#333333] text-white hover:border-[#8CF000]'
+                  }`}
+                  title="Favoritar"
+                >
+                  <Heart className={`w-5 h-5 ${favorited ? 'fill-[#8CF000]' : ''}`} />
+                </motion.button>
+              </div>
+            </div>
+          )}
 
-          {/* Shipping Calculation */}
-          <ProductShippingBox price={currentPrice} />
+          {/* Shipping Calculation (Apenas para produtos com preço e compra direta) */}
+          {product.price > 0 && <ProductShippingBox price={currentPrice} />}
 
           {/* Trust Guarantees */}
           <div className="pt-2 flex items-center gap-4 text-xs text-[#8E8E8E]">
